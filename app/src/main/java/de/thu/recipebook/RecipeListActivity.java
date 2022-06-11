@@ -24,11 +24,13 @@ public class RecipeListActivity extends AppCompatActivity {
             recipeNames.add(recipe.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.list_view_item_recipe,
-                R.id.text_view_recipe,
-                recipeNames);
+        //Code for exercise 2
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+//                R.layout.list_view_item_recipe,
+//                R.id.text_view_recipe_list,
+//                recipeNames);
 
+        RecipeListAdapter adapter = new RecipeListAdapter(recipeRepository.getAllRecipes());
         ListView listView = findViewById(R.id.list_view_recipe);
         listView.setAdapter(adapter);
     }

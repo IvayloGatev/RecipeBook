@@ -3,13 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout-land/activity_create.xml" value="0.2015625" />
+        <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout-land/activity_create_recipe.xml" value="0.2015625" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/activity_create_recipe.xml" value="0.264" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/activity_main.xml" value="0.4" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/activity_recipe_details.xml" value="0.1852355072463768" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/activity_recipe_list.xml" value="0.1802536231884058" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/county_text.xml" value="0.19021739130434784" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/county_text_view.xml" value="0.1852355072463768" />
+        <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/list_view_item_recipe.xml" value="0.17527173913043478" />
         <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/layout/recipe_list_view_item.xml" value="0.1802536231884058" />
+        <entry key="..\:/Programming/Bachelor_Thesis/RecipeBook/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
       </map>
     </option>
   </component>

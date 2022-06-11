@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text_view_recipe"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:minHeight="40dp"
-    android:textSize="34sp"
-    android:padding="10dp"></TextView>
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/image_view_recipe_list"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:paddingHorizontal="10dp"
+        app:srcCompat="@drawable/dish_picture_placeholder" />
+
+    <TextView
+        android:id="@+id/text_view_recipe_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:textSize="22sp" />
+
+</LinearLayout>

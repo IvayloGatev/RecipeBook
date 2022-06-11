@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RecipeDetailsActivity">
 
     <LinearLayout
@@ -16,20 +17,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:paddingLeft="10dp"
+            android:paddingHorizontal="10dp"
             android:paddingTop="10dp"
-            android:paddingRight="10dp"
             android:paddingBottom="20dp"
             android:text="Name"
             android:textAlignment="center"
             android:textSize="34sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/image_view_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="20dp"
+            app:srcCompat="@drawable/dish_picture_placeholder" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="10dp"
             android:text="Country of origin:"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -39,8 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
             android:text="Country of origin"
             android:textAlignment="textStart"
@@ -49,8 +56,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="10dp"
             android:text="Ingredients:"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -60,8 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
             android:text="Ingredients"
             android:textAlignment="textStart"
@@ -70,8 +75,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="10dp"
             android:text="Instructions:"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -81,8 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
             android:text="Instructions"
             android:textAlignment="textStart"
