@@ -12,6 +12,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_recipe_details"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
+
         <TextView
             android:id="@+id/text_view_name"
             android:layout_width="match_parent"
@@ -47,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
+            android:onClick="countryTextViewOnClick"
             android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
             android:text="Country of origin"
@@ -91,13 +103,14 @@
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/button_next"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="50dp"
-            android:layout_marginBottom="30dp"
-            android:onClick="nextButtonOnClick"
-            android:text="Next Recipe" />
+<!--Exercise 1-->
+<!--        <Button-->
+<!--            android:id="@+id/button_next"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="50dp"-->
+<!--            android:layout_marginBottom="30dp"-->
+<!--            android:onClick="nextButtonOnClick"-->
+<!--            android:text="Next Recipe" />-->
     </LinearLayout>
 </ScrollView>

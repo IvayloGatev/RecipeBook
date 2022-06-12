@@ -1,7 +1,9 @@
 package de.thu.recipebook;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,7 +18,11 @@ public class CreateRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recipe);
 
-        recipeRepository = new RecipeRepository();
+        Toolbar toolbar = findViewById(R.id.toolbar_create_recipe);
+        setSupportActionBar(toolbar);
+
+
+        recipeRepository = RecipeRepository.getInstance();
 
         String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
                 "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
@@ -52,10 +58,16 @@ public class CreateRecipeActivity extends AppCompatActivity {
             Recipe recipe = new Recipe(name.getText().toString(), country.getSelectedItem().toString(),
                     ingredients.getText().toString(), instructions.getText().toString());
             recipeRepository.addRecipe(recipe);
-            name.getText().clear();
-            country.setSelection(0);
-            ingredients.getText().clear();
-            instructions.getText().clear();
+
+//            Ex. 2
+//            name.getText().clear();
+//            country.setSelection(0);
+//            ingredients.getText().clear();
+//            instructions.getText().clear();
+
+            Intent recipeListIntent = new Intent(this, RecipeListActivity.class);
+            recipeListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(recipeListIntent);
         }
     }
 

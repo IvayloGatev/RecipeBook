@@ -6,7 +6,9 @@ import java.util.List;
 public class RecipeRepository {
     private ArrayList<Recipe> recipes;
 
-    public RecipeRepository() {
+    private static RecipeRepository instance;
+
+    private RecipeRepository() {
         recipes = new ArrayList<>();
 
         recipes.add(new Recipe("Classic Lasagna", "Italy",
@@ -37,7 +39,7 @@ public class RecipeRepository {
                         "1/2 cup oil\n" +
                         "2 tablespoons paprika\n" +
                         "1 tablespoon salt\n" +
-                        "1 teaspoon crushed black pepper,",
+                        "1 teaspoon crushed black pepper",
                 "Start with cooking the onion in a pan with 1/4 oil until golden brown. Then add the ground meat, the pepper, the paprika, and half the salt. Fry until meat gets brown and then remove the pan from the heat.\n" +
                         "\nMix well with the potatoes and the other 1/2 tablespoon of salt. Add the mixture in a casserole pan with the rest of the oil. Bake in oven for about 40 minutes on 425 F (~220 C). \n" +
                         "\n" +
@@ -69,6 +71,16 @@ public class RecipeRepository {
                         "10. To serve: use a pastry bag to add kama foam onto the jelly. Sprinkle some freeze-dried, crushed berries on top."
         ));
     }
+
+    public static RecipeRepository getInstance() {
+        if (instance == null) {
+            synchronized (RecipeRepository.class) {
+                instance = new RecipeRepository();
+            }
+        }
+        return instance;
+    }
+
 
     public Recipe getNextRecipe(Recipe currentRecipe) {
         int nextIndex = recipes.indexOf(currentRecipe) + 1;

@@ -10,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeBook" >
         <activity
-            android:name=".RecipeListActivity"
-            android:exported="true" />
-        <activity
             android:name=".RecipeDetailsActivity"
             android:exported="true" />
         <activity
             android:name=".CreateRecipeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".RecipeListActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,5 +25,11 @@
             </intent-filter>
         </activity>
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
 
 </manifest>

@@ -28,4 +28,10 @@ public class Recipe {
     public String getInstructions() {
         return instructions;
     }
+
+    @Override
+    public String toString() {
+        return name + "\n" + "Country of origin:\n" + country + "\nIngredients:\n" + ingredients
+                + "\nInstructions:\n" + instructions;
+    }
 }
