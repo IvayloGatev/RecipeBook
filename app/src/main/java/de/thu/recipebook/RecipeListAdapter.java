@@ -45,4 +45,8 @@ public class RecipeListAdapter extends BaseAdapter {
         textView.setText(recipeName);
         return view;
     }
+
+    public void setData(List<Recipe> data) {
+        this.data = data;
+    }
 }
