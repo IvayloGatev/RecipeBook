@@ -12,6 +12,8 @@ import android.widget.Spinner;
 
 public class CreateRecipeActivity extends AppCompatActivity {
     private RecipeRepository recipeRepository;
+    private Recipe recipe;
+    private AddRecipeRunnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,8 @@ public class CreateRecipeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_create_recipe);
         setSupportActionBar(toolbar);
 
-
         recipeRepository = RecipeRepository.getInstance();
+        runnable = new AddRecipeRunnable(recipeRepository, this);
 
         String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
                 "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
@@ -55,9 +57,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            Recipe recipe = new Recipe(name.getText().toString(), country.getSelectedItem().toString(),
+            recipe = new Recipe(name.getText().toString(), country.getSelectedItem().toString(),
                     ingredients.getText().toString(), instructions.getText().toString());
-            recipeRepository.addRecipe(recipe);
+            new Thread(runnable).start();
 
 //            Ex. 2
 //            name.getText().clear();
@@ -77,5 +79,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
     }
 }

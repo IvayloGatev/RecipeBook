@@ -22,6 +22,8 @@ public class RecipeRepository {
 
     public static String URL_STRING = "https://recipe-book-backend.vercel.app/api/recipes";
 
+    private List<Recipe> recipes;
+
     private RecipeRepository() {
         //Ex. 1
 //        recipes = new ArrayList<>();
@@ -85,6 +87,7 @@ public class RecipeRepository {
 //                        "9. Whip the cream just before serving and gradually add it to the kama foam, mixing very gently.\n" +
 //                        "10. To serve: use a pastry bag to add kama foam onto the jelly. Sprinkle some freeze-dried, crushed berries on top."
 //        ));
+        recipes = new ArrayList<>();
     }
 
     public static RecipeRepository getInstance() {
@@ -140,10 +143,13 @@ public class RecipeRepository {
     }
 
     public List<Recipe> getAllRecipes() {
+        return recipes;
+    }
+
+    public void updateRecipeList() {
         //Ex. 2
         //return recipes;
-        List<Recipe> recipes = new ArrayList<>();
-
+        recipes.clear();
         try {
             String data = getDataFromUrl(URL_STRING);
             if (!data.isEmpty()) {
@@ -160,11 +166,9 @@ public class RecipeRepository {
             Log.e("GetAllRecipes", "Can't query database.");
             e.printStackTrace();
         }
-        return recipes;
-
     }
 
-    public Recipe getRecipe(int index) {
+    public Recipe fetchRecipe(int index) {
         try {
             String data = getDataFromUrl(URL_STRING + "/" + index);
             if (!data.isEmpty()) {
@@ -177,7 +181,6 @@ public class RecipeRepository {
         } catch (Exception e) {
             Log.e("GetRecipe", "Can't query database.");
             e.printStackTrace();
-
         }
 
         return new Recipe();

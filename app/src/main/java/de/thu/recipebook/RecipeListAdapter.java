@@ -8,13 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeListAdapter extends BaseAdapter {
     private List<Recipe> data;
 
-    public RecipeListAdapter(List<Recipe> data) {
-        this.data = data;
+    public RecipeListAdapter() {
+        data = new ArrayList<>();
     }
 
     @Override

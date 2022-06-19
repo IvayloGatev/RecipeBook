@@ -14,28 +14,35 @@ import android.view.View;
 import android.widget.TextView;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
+    private RecipeRepository recipeRepository;
+
+    //    Ex. 1
+//    private RecipeRepository recipeRepository;
     private Recipe recipe;
 
-//    Ex. 1
-//    private RecipeRepository recipeRepository;
-//    private Recipe currentRecipe;
-
     private ShareActionProvider shareActionProvider;
+    private FetchRecipeDetailsRunnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
+//        Exercise 5
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+
         Toolbar toolbar = findViewById(R.id.toolbar_recipe_details);
         setSupportActionBar(toolbar);
 
+        recipeRepository = RecipeRepository.getInstance();
+        runnable = new FetchRecipeDetailsRunnable(recipeRepository, this);
+        new Thread(runnable).start();
 
+//        Ex. 1
 //        recipeRepository = new RecipeRepository();
 //        currentRecipe = recipeRepository.getNextRecipe(currentRecipe);
-        recipe = new Recipe((String) getIntent().getSerializableExtra("name"), (String) getIntent().getSerializableExtra("country"),
-                (String) getIntent().getSerializableExtra("ingredients"), (String) getIntent().getSerializableExtra("instructions"));
-        setRecipe();
+
     }
 
 //    Ex. 1
@@ -44,7 +51,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 //        setRecipe();
 //    }
 
-    private void setRecipe() {
+    public void setRecipe(Recipe recipe) {
         TextView nameTextView = findViewById(R.id.text_view_name);
         nameTextView.setText(recipe.getName());
 
@@ -56,6 +63,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         TextView instructionsTextView = findViewById(R.id.text_view_instructions);
         instructionsTextView.setText(recipe.getInstructions());
+
+        this.recipe = recipe;
     }
 
     public void countryTextViewOnClick(View view) {
@@ -72,19 +81,21 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         MenuItem shareItem = menu.findItem(R.id.action_share);
         shareActionProvider = (ShareActionProvider)
                 MenuItemCompat.getActionProvider(shareItem);
-        setShareText(recipe.toString());
+        setShareText("");
 
         return true;
     }
 
-    private void setShareText(String text) {
+    public void setShareText(String text) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         if (text != null) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         }
-
         shareActionProvider.setShareIntent(shareIntent);
     }
 
+    public String getId() {
+        return getIntent().getStringExtra("id");
+    }
 }

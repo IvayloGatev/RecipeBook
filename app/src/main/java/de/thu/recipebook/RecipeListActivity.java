@@ -18,20 +18,24 @@ import java.util.List;
 public class RecipeListActivity extends AppCompatActivity {
     private RecipeRepository recipeRepository;
     private RecipeListAdapter adapter;
+    private FetchRecipeListRunnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+//        Exercise 5
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
 
         Toolbar toolbar = findViewById(R.id.toolbar_recipe_list);
         setSupportActionBar(toolbar);
 
         recipeRepository = RecipeRepository.getInstance();
-        List<Recipe> recipes = recipeRepository.getAllRecipes();
+        adapter = new RecipeListAdapter();
+        runnable = new FetchRecipeListRunnable(recipeRepository, this, adapter);
+        new Thread(runnable).start();
 
         //Code for exercise 2
 //        List<String> recipeNames = new ArrayList<>();
@@ -43,21 +47,13 @@ public class RecipeListActivity extends AppCompatActivity {
 //                R.id.text_view_recipe_list,
 //                recipeNames);
 
-        adapter = new RecipeListAdapter(recipes);
         ListView listView = findViewById(R.id.list_view_recipe);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Recipe recipe = recipeRepository.getRecipe(i);
-                Intent recipeDetailsIntent = new Intent(RecipeListActivity.this, RecipeDetailsActivity.class);
-                recipeDetailsIntent.putExtra("name", recipe.getName());
-                recipeDetailsIntent.putExtra("country", recipe.getCountry());
-                recipeDetailsIntent.putExtra("ingredients", recipe.getIngredients());
-                recipeDetailsIntent.putExtra("instructions", recipe.getInstructions());
-                startActivity(recipeDetailsIntent);
-            }
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent recipeDetailsIntent = new Intent(RecipeListActivity.this, RecipeDetailsActivity.class);
+            recipeDetailsIntent.putExtra("id", recipeRepository.getAllRecipes().get(i).getId());
+            startActivity(recipeDetailsIntent);
         });
     }
 
@@ -74,8 +70,7 @@ public class RecipeListActivity extends AppCompatActivity {
                 Intent createRecipeIntent = new Intent(this, CreateRecipeActivity.class);
                 startActivity(createRecipeIntent);
             case R.id.refresh_entry:
-                adapter.setData(recipeRepository.getAllRecipes());
-                adapter.notifyDataSetChanged();
+                new Thread(runnable).start();
             default:
                 return super.onOptionsItemSelected(item);
         }
