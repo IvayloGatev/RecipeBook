@@ -4,4 +4,9 @@
     <item android:id="@+id/action_share" android:title="Share"
         app:showAsAction="ifRoom"
         app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider" />
+    <item
+        android:id="@+id/favorite_entry"
+        android:title="Add to favorites"
+        app:showAsAction="never"
+        app:titleTextColor="?attr/colorOnPrimary" />
 </menu>

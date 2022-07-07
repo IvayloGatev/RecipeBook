@@ -1,6 +1,9 @@
 package de.thu.recipebook;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +16,10 @@ import java.util.List;
 
 public class RecipeListAdapter extends BaseAdapter {
     private List<Recipe> data;
+    private FavoritesDbHelper dbHelper;
 
-    public RecipeListAdapter() {
+    public RecipeListAdapter(FavoritesDbHelper dbHelper) {
+        this.dbHelper = dbHelper;
         data = new ArrayList<>();
     }
 
@@ -44,6 +49,16 @@ public class RecipeListAdapter extends BaseAdapter {
 
         TextView textView = view.findViewById(R.id.text_view_recipe_list);
         textView.setText(recipeName);
+
+        ImageView imageView = view.findViewById(R.id.image_view_favorite);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor c = db.query(FavoritesDbHelper.FAVORITES_TABLE, new String[]{BaseColumns._ID},
+                BaseColumns._ID + " = ?", new String[]{data.get(i).getId()}, null, null, null);
+        if (c.getCount() > 0) {
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+        }
         return view;
     }
 

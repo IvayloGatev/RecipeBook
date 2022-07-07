@@ -3,11 +3,11 @@ package de.thu.recipebook;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -15,17 +15,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeRepository {
+public class RecipeDatabase {
     //private ArrayList<Recipe> recipes;
 
-    private static RecipeRepository instance;
+    private static RecipeDatabase instance;
 
-    public static String URL_STRING = "https://recipe-book-backend.vercel.app/api/recipes";
 
     private List<Recipe> recipes;
 
-    private RecipeRepository() {
-        //Ex. 1
+    private RecipeDatabase() {
+//        Ex. 1
 //        recipes = new ArrayList<>();
 //
 //        recipes.add(new Recipe("Classic Lasagna", "Italy",
@@ -90,10 +89,10 @@ public class RecipeRepository {
         recipes = new ArrayList<>();
     }
 
-    public static RecipeRepository getInstance() {
+    public static RecipeDatabase getInstance() {
         if (instance == null) {
-            synchronized (RecipeRepository.class) {
-                instance = new RecipeRepository();
+            synchronized (RecipeDatabase.class) {
+                instance = new RecipeDatabase();
             }
         }
         return instance;
@@ -108,97 +107,102 @@ public class RecipeRepository {
 //        return recipes.get(nextIndex);
 //    }
 
-    public void addRecipe(Recipe recipe) {
-        //Ex. 2
-        //recipes.add(recipe);
+//    public void addRecipe(Recipe recipe) {
+//        //Ex. 2
+//        //recipes.add(recipe);
+//
+////        try {
+//            HttpURLConnection connection = getUrlConnection(URL_STRING, "POST");
+//            connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=*****");
+//                    connection.connect();
+//            connection.connect();
+//            JSONObject jsonParam = convertRecipeToJSONObject(recipe);
+//
+//            Log.i("JSON", jsonParam.toString());
+//            DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+//            os.writeBytes(jsonParam.toString());
+//
+//            os.flush();
+//            os.close();
+//            connection.disconnect();
+//        } catch (Exception e) {
+//            Log.e("AddRecipe", "Can't query database.");
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-        try {
-            URL url = new URL(URL_STRING);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestProperty("Accept", "application/json");
-            urlConnection.setDoOutput(true);
-            urlConnection.setDoInput(true);
-            urlConnection.connect();
-
-            JSONObject jsonParam = new JSONObject();
-            jsonParam.put("name", recipe.getName());
-            jsonParam.put("country", recipe.getCountry());
-            jsonParam.put("ingredients", recipe.getIngredients());
-            jsonParam.put("instructions", recipe.getInstructions());
-
-            Log.i("JSON", jsonParam.toString());
-            DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
-            os.writeBytes(jsonParam.toString());
-
-            os.flush();
-            os.close();
-            urlConnection.disconnect();
-        } catch (Exception e) {
-            Log.e("AddRecipe", "Can't query database.");
-            e.printStackTrace();
-        }
-
-    }
-
-    public List<Recipe> getAllRecipes() {
+    public List<Recipe> getRecipes() {
         return recipes;
     }
 
-    public void updateRecipeList() {
-        //Ex. 2
-        //return recipes;
-        recipes.clear();
-        try {
-            String data = getDataFromUrl(URL_STRING);
-            if (!data.isEmpty()) {
-                JSONArray recipesJsonArray = new JSONArray(data);
-
-                for (int i = 0; i < recipesJsonArray.length(); i++) {
-                    JSONObject properties = recipesJsonArray.getJSONObject(i);
-                    Log.i("JSON", properties.toString());
-                    recipes.add(new Recipe(properties.getString("id"), properties.getString("name")));
-                }
-            }
-
-        } catch (Exception e) {
-            Log.e("GetAllRecipes", "Can't query database.");
-            e.printStackTrace();
-        }
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
     }
 
-    public Recipe fetchRecipe(int index) {
-        try {
-            String data = getDataFromUrl(URL_STRING + "/" + index);
-            if (!data.isEmpty()) {
-                JSONObject jsonObject = new JSONObject(data);
-                return new Recipe(jsonObject.getString("id"), jsonObject.getString("name"),
-                        jsonObject.getString("country"), jsonObject.getString("ingredients"),
-                        jsonObject.getString("instructions"));
-            }
+//    public void updateRecipeList() {
+//        //Ex. 2
+//        //return recipes;
+//        recipes.clear();
+//        try {
+//            String data = getDataFromUrl(URL_STRING);
+//            if (!data.isEmpty()) {
+//                JSONArray recipesJsonArray = new JSONArray(data);
+//
+//                for (int i = 0; i < recipesJsonArray.length(); i++) {
+//                    JSONObject properties = recipesJsonArray.getJSONObject(i);
+//                    Log.i("JSON", properties.toString());
+//                    recipes.add(new Recipe(properties.getString("id"), properties.getString("name")));
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            Log.e("GetAllRecipes", "Can't query database.");
+//            e.printStackTrace();
+//        }
+//    }
 
-        } catch (Exception e) {
-            Log.e("GetRecipe", "Can't query database.");
-            e.printStackTrace();
-        }
+//    public Recipe fetchRecipe(int index) {
+////        try {
+////            String data = getDataFromUrl(URL_STRING + "/" + index);
+////            if (!data.isEmpty()) {
+////                JSONObject jsonObject = new JSONObject(data);
+////                return new Recipe(jsonObject.getString("id"), jsonObject.getString("name"),
+////                        jsonObject.getString("country"), jsonObject.getString("ingredients"),
+////                        jsonObject.getString("instructions"));
+////            }
+////
+////        } catch (Exception e) {
+////            Log.e("GetRecipe", "Can't query database.");
+////            e.printStackTrace();
+////        }
+////
+////        return new Recipe();
+//    }
 
-        return new Recipe();
-    }
-
-    private String getDataFromUrl(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        InputStream stream = connection.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        String data = "";
-        String line;
-
-        while ((line = reader.readLine()) != null) {
-            data = data + line;
-        }
-        connection.disconnect();
-        return data;
-
-    }
+//    private HttpURLConnection getUrlConnection(String urlString, String requestMethod) throws Exception {
+//    }
+//
+//    private String getDataFromUrl(String urlString) throws Exception {
+//        HttpURLConnection connection = getUrlConnection(urlString, "GET");
+//        InputStream stream = connection.getInputStream();
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+//        String data = "";
+//        String line;
+//
+//        while ((line = reader.readLine()) != null) {
+//            data = data + line;
+//        }
+//        connection.disconnect();
+//        return data;
+//    }
+//
+//    private JSONObject convertRecipeToJSONObject(Recipe recipe) throws JSONException {
+//        JSONObject jsonParam = new JSONObject();
+//        jsonParam.put("name", recipe.getName());
+//        jsonParam.put("country", recipe.getCountry());
+//        jsonParam.put("ingredients", recipe.getIngredients());
+//        jsonParam.put("instructions", recipe.getInstructions());
+//        return  jsonParam;
+//    }
 }

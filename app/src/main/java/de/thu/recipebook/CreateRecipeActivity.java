@@ -1,30 +1,35 @@
 package de.thu.recipebook;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class CreateRecipeActivity extends AppCompatActivity {
-    private RecipeRepository recipeRepository;
-    private Recipe recipe;
+    private RecipeDatabase recipeDatabase;
     private AddRecipeRunnable runnable;
+
+    private Recipe recipe;
+    private Bitmap image;
+
+    private ActivityResultLauncher<String> chooseImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recipe);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_create_recipe);
-        setSupportActionBar(toolbar);
-
-        recipeRepository = RecipeRepository.getInstance();
-        runnable = new AddRecipeRunnable(recipeRepository, this);
+        recipeDatabase = RecipeDatabase.getInstance();
+        runnable = new AddRecipeRunnable(recipeDatabase, this);
 
         String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
                 "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
@@ -37,6 +42,26 @@ public class CreateRecipeActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner countriesSpinner = findViewById(R.id.spinner_country);
         countriesSpinner.setAdapter(adapter);
+
+        chooseImage = registerForActivityResult(new
+                ActivityResultContracts.GetContent(), uri -> {
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                image = bitmap;
+
+                ImageView imageView = findViewById(R.id.image_view_upload);
+                float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+                imageView.getLayoutParams().height = (int) (270 * scale + 0.5f);
+                imageView.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+    }
+
+    public void selectImage(View view) {
+        chooseImage.launch("image/*");
     }
 
     public void saveButtonOnClick(View view) {
@@ -57,8 +82,13 @@ public class CreateRecipeActivity extends AppCompatActivity {
         }
 
         if (isValid) {
+            String creatorId = Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+
             recipe = new Recipe(name.getText().toString(), country.getSelectedItem().toString(),
-                    ingredients.getText().toString(), instructions.getText().toString());
+                    ingredients.getText().toString(), instructions.getText().toString(), creatorId);
+            recipe.setImage(image);
+
             new Thread(runnable).start();
 
 //            Ex. 2
@@ -66,10 +96,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
 //            country.setSelection(0);
 //            ingredients.getText().clear();
 //            instructions.getText().clear();
-
-            Intent recipeListIntent = new Intent(this, RecipeListActivity.class);
-            recipeListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(recipeListIntent);
         }
     }
 

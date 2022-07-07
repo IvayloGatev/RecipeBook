@@ -1,22 +1,19 @@
 package de.thu.recipebook;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import java.util.List;
 
 public class RecipeListActivity extends AppCompatActivity {
-    private RecipeRepository recipeRepository;
+    private RecipeDatabase recipeDatabase;
+    private FavoritesDbHelper favoritesDbHelper;
     private RecipeListAdapter adapter;
     private FetchRecipeListRunnable runnable;
 
@@ -29,12 +26,10 @@ public class RecipeListActivity extends AppCompatActivity {
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_recipe_list);
-        setSupportActionBar(toolbar);
-
-        recipeRepository = RecipeRepository.getInstance();
-        adapter = new RecipeListAdapter();
-        runnable = new FetchRecipeListRunnable(recipeRepository, this, adapter);
+        recipeDatabase = RecipeDatabase.getInstance();
+        favoritesDbHelper = new FavoritesDbHelper(this);
+        adapter = new RecipeListAdapter(favoritesDbHelper);
+        runnable = new FetchRecipeListRunnable(recipeDatabase, this, adapter);
         new Thread(runnable).start();
 
         //Code for exercise 2
@@ -52,7 +47,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             Intent recipeDetailsIntent = new Intent(RecipeListActivity.this, RecipeDetailsActivity.class);
-            recipeDetailsIntent.putExtra("id", recipeRepository.getAllRecipes().get(i).getId());
+            recipeDetailsIntent.putExtra("id", recipeDatabase.getRecipes().get(i).getId());
             startActivity(recipeDetailsIntent);
         });
     }

@@ -12,17 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_recipe_details"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
-
         <TextView
             android:id="@+id/text_view_name"
             android:layout_width="match_parent"
@@ -31,25 +20,25 @@
             android:paddingHorizontal="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="20dp"
-            android:text="Name"
             android:textAlignment="center"
             android:textSize="34sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/image_view_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
             android:adjustViewBounds="true"
             android:paddingHorizontal="10dp"
-            android:paddingBottom="20dp"
-            app:srcCompat="@drawable/dish_picture_placeholder" />
+            android:paddingBottom="20dp" />
 
         <TextView
+            android:id="@+id/text_view_country_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="Country of origin:"
+            android:visibility="invisible"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -61,15 +50,16 @@
             android:onClick="countryTextViewOnClick"
             android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
-            android:text="Country of origin"
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/text_view_ingredients_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="Ingredients:"
+            android:visibility="invisible"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -80,15 +70,16 @@
             android:includeFontPadding="false"
             android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
-            android:text="Ingredients"
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/text_view_instructions_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="Instructions:"
+            android:visibility="invisible"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -99,7 +90,6 @@
             android:includeFontPadding="false"
             android:paddingHorizontal="10dp"
             android:paddingBottom="20dp"
-            android:text="Instructions"
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
