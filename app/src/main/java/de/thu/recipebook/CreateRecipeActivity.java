@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class CreateRecipeActivity extends AppCompatActivity {
     private RecipeDatabase recipeDatabase;
-    private AddRecipeRunnable runnable;
+    private CreateRecipeRunnable runnable;
 
     private Recipe recipe;
     private Bitmap image;
@@ -29,7 +29,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_recipe);
 
         recipeDatabase = RecipeDatabase.getInstance();
-        runnable = new AddRecipeRunnable(recipeDatabase, this);
+        runnable = new CreateRecipeRunnable(recipeDatabase, this);
 
         String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
                 "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",

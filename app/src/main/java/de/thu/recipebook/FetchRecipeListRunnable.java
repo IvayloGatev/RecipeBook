@@ -29,7 +29,7 @@ public class FetchRecipeListRunnable implements Runnable {
     @Override
     public void run() {
         synchronized (FetchRecipeListRunnable.this) {
-            database.setRecipes(fetchRecipeList());
+            fetchRecipeList();
             if (activity != null) {
                 adapter.setData(database.getRecipes());
                 activity.runOnUiThread(() -> {
@@ -41,7 +41,7 @@ public class FetchRecipeListRunnable implements Runnable {
         }
     }
 
-    private List<Recipe> fetchRecipeList() {
+    private void fetchRecipeList() {
         String url = "http://192.168.178.21:3000/api/recipes";
 
         OkHttpClient client = new OkHttpClient();
@@ -49,12 +49,12 @@ public class FetchRecipeListRunnable implements Runnable {
 
         try (Response response = client.newCall(request).execute()) {
             String body = response.body().string();
-            return convertResponseBodyToRecipeList(body);
+            List<Recipe> recipes = convertResponseBodyToRecipeList(body);
+            database.setRecipes(recipes);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return new ArrayList<>();
     }
 
     private List<Recipe> convertResponseBodyToRecipeList(String body) throws Exception {

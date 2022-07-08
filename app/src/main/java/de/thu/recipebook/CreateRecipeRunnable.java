@@ -7,7 +7,6 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -17,18 +16,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class AddRecipeRunnable implements Runnable {
+public class CreateRecipeRunnable implements Runnable {
     private RecipeDatabase database;
     private CreateRecipeActivity activity;
 
-    AddRecipeRunnable(RecipeDatabase database, CreateRecipeActivity activity) {
+    CreateRecipeRunnable(RecipeDatabase database, CreateRecipeActivity activity) {
         this.database = database;
         this.activity = activity;
     }
 
     @Override
     public void run() {
-        synchronized (AddRecipeRunnable.this) {
+        synchronized (CreateRecipeRunnable.this) {
             if (activity != null) {
                 Recipe recipe = activity.getRecipe();
                 String id = createRecipe(recipe);

@@ -13,11 +13,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
     //    Ex. 1
@@ -26,7 +30,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private FavoritesDbHelper favoritesDbHelper;
     private ShareActionProvider shareActionProvider;
     private FetchRecipeDetailsRunnable runnable;
-
+    private TextToSpeech textToSpeech;
     private Menu menu;
 
     @Override
@@ -38,6 +42,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
         favoritesDbHelper = new FavoritesDbHelper(this);
+        textToSpeech = new TextToSpeech(getApplicationContext(), status -> {
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(Locale.UK);
+            }
+        });
 
         runnable = new FetchRecipeDetailsRunnable(this);
         new Thread(runnable).start();
@@ -72,6 +81,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         instructionsTextView.setText(recipe.getInstructions());
         TextView instructionsLabelTextView = findViewById(R.id.text_view_instructions_label);
         instructionsLabelTextView.setVisibility(TextView.VISIBLE);
+
+        Button listenButton = findViewById(R.id.button_listen);
+        listenButton.setVisibility(TextView.VISIBLE);
 
         ImageView imageView = findViewById(R.id.image_view_picture);
         if (recipe.getImage() != null) {
@@ -140,5 +152,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             favoriteItem.setTitle("Remove from favorites");
         }
 
+    }
+
+    public void listen(View view) {
+        Button button = (Button) view;
+        if (textToSpeech.isSpeaking()) {
+            textToSpeech.stop();
+            button.setText("Play");
+        }else {
+            textToSpeech.speak(recipe.toString(), TextToSpeech.QUEUE_FLUSH, null, null);
+            button.setText("Stop");
+        }
     }
 }

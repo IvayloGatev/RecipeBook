@@ -1,9 +1,12 @@
 package de.thu.recipebook;
 
-import android.content.ContentValues;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -16,6 +19,9 @@ public class RecipeListActivity extends AppCompatActivity {
     private FavoritesDbHelper favoritesDbHelper;
     private RecipeListAdapter adapter;
     private FetchRecipeListRunnable runnable;
+    private ListView listView;
+
+    private static final int JOB_ID = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +36,17 @@ public class RecipeListActivity extends AppCompatActivity {
         favoritesDbHelper = new FavoritesDbHelper(this);
         adapter = new RecipeListAdapter(favoritesDbHelper);
         runnable = new FetchRecipeListRunnable(recipeDatabase, this, adapter);
-        new Thread(runnable).start();
+        ComponentName serviceName = new ComponentName(this, UpdateJobService.class);
+        JobInfo jobInfo = new JobInfo.Builder(JOB_ID, serviceName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .setPeriodic(86400000).build();
+        JobScheduler scheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        int result = scheduler.schedule(jobInfo);
+        if (result == JobScheduler.RESULT_SUCCESS) {
+            adapter.notifyDataSetChanged();//TODO: doesn't work. Find a way to fix.
+            Log.i("SCHEDULER", "Job Scheduled successfully");
+        }
 
         //Code for exercise 2
 //        List<String> recipeNames = new ArrayList<>();
@@ -42,7 +58,7 @@ public class RecipeListActivity extends AppCompatActivity {
 //                R.id.text_view_recipe_list,
 //                recipeNames);
 
-        ListView listView = findViewById(R.id.list_view_recipe);
+        listView = findViewById(R.id.list_view_recipe);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -69,5 +85,11 @@ public class RecipeListActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listView.invalidateViews();
     }
 }

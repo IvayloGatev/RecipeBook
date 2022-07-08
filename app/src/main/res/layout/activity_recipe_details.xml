@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RecipeDetailsActivity">
 
     <LinearLayout
@@ -32,15 +32,24 @@
             android:paddingHorizontal="10dp"
             android:paddingBottom="20dp" />
 
+        <Button
+            android:id="@+id/button_listen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            android:visibility="invisible"
+            android:onClick="listen"
+            android:text="Listen" />
+
         <TextView
             android:id="@+id/text_view_country_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="Country of origin:"
-            android:visibility="invisible"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/text_view_country"
@@ -59,9 +68,9 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="Ingredients:"
-            android:visibility="invisible"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/text_view_ingredients"
@@ -79,9 +88,9 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="Instructions:"
-            android:visibility="invisible"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/text_view_instructions"
@@ -93,14 +102,14 @@
             android:textAlignment="textStart"
             android:textSize="20sp" />
 
-<!--Exercise 1-->
-<!--        <Button-->
-<!--            android:id="@+id/button_next"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="50dp"-->
-<!--            android:layout_marginBottom="30dp"-->
-<!--            android:onClick="nextButtonOnClick"-->
-<!--            android:text="Next Recipe" />-->
+        <!--Exercise 1-->
+        <!--        <Button-->
+        <!--            android:id="@+id/button_next"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginHorizontal="50dp"-->
+        <!--            android:layout_marginBottom="30dp"-->
+        <!--            android:onClick="nextButtonOnClick"-->
+        <!--            android:text="Next Recipe" />-->
     </LinearLayout>
 </ScrollView>
