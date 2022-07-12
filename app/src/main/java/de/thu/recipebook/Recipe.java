@@ -8,28 +8,28 @@ public class Recipe {
     private String country;
     private String ingredients;
     private String instructions;
-    private String creatorId;
+    private boolean isCreator;
     private Bitmap image;
 
     public Recipe() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, false);
     }
 
     public Recipe(String id, String name, String country) {
-        this(id, name, country, null, null, null);
+        this(id, name, country, null, null, false);
     }
 
-    public Recipe(String name, String country, String ingredients, String instructions, String creatorId) {
-        this(null, name, country, ingredients, instructions, creatorId);
+    public Recipe(String name, String country, String ingredients, String instructions, boolean isOwner) {
+        this(null, name, country, ingredients, instructions, isOwner);
     }
 
-    public Recipe(String id, String name, String country, String ingredients, String instructions, String creatorId) {
+    public Recipe(String id, String name, String country, String ingredients, String instructions, boolean isOwner) {
         this.id = id;
         this.name = name;
         this.country = country;
         this.ingredients = ingredients;
         this.instructions = instructions;
-        this.creatorId = creatorId;
+        this.isCreator = isOwner;
     }
 
     public String getId() {
@@ -52,8 +52,8 @@ public class Recipe {
         return instructions;
     }
 
-    public String getCreatorId() {
-        return creatorId;
+    public boolean isCreator() {
+        return isCreator;
     }
 
     public Bitmap getImage() {

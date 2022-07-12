@@ -1,10 +1,10 @@
-package de.thu.recipebook;
+package de.thu.recipebook.activities;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,14 +14,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class CreateRecipeActivity extends AppCompatActivity {
+import de.thu.recipebook.runnables.AddRecipeRunnable;
+import de.thu.recipebook.R;
+import de.thu.recipebook.Recipe;
+import de.thu.recipebook.RecipeDatabase;
+
+public class AddRecipeActivity extends AppCompatActivity {
     private RecipeDatabase recipeDatabase;
-    private CreateRecipeRunnable runnable;
+    private AddRecipeRunnable runnable;
+    private ActivityResultLauncher<String> chooseImage;
 
     private Recipe recipe;
     private Bitmap image;
 
-    private ActivityResultLauncher<String> chooseImage;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_recipe);
 
         recipeDatabase = RecipeDatabase.getInstance();
-        runnable = new CreateRecipeRunnable(recipeDatabase, this);
+        runnable = new AddRecipeRunnable(recipeDatabase, this);
 
         String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
                 "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
@@ -43,16 +49,24 @@ public class CreateRecipeActivity extends AppCompatActivity {
         Spinner countriesSpinner = findViewById(R.id.spinner_country);
         countriesSpinner.setAdapter(adapter);
 
+        imageView = findViewById(R.id.image_view_upload);
+        imageView.setOnClickListener(view -> {
+            if (image != null) {
+                image = null;
+                imageView.setImageBitmap(null);
+                imageView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+        });
+
         chooseImage = registerForActivityResult(new
                 ActivityResultContracts.GetContent(), uri -> {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 image = bitmap;
+                imageView.setImageBitmap(bitmap);
 
-                ImageView imageView = findViewById(R.id.image_view_upload);
                 float scale = getApplicationContext().getResources().getDisplayMetrics().density;
                 imageView.getLayoutParams().height = (int) (270 * scale + 0.5f);
-                imageView.setImageBitmap(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -82,11 +96,8 @@ public class CreateRecipeActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            String creatorId = Settings.Secure.getString(getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-
             recipe = new Recipe(name.getText().toString(), country.getSelectedItem().toString(),
-                    ingredients.getText().toString(), instructions.getText().toString(), creatorId);
+                    ingredients.getText().toString(), instructions.getText().toString(), true);
             recipe.setImage(image);
 
             new Thread(runnable).start();

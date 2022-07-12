@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_share" android:title="Share"
         app:showAsAction="ifRoom"
+        android:visible="false"
         app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider" />
     <item
         android:id="@+id/favorite_entry"
-        android:title="Add to favorites"
+        android:title="Add To Favorites"
         app:showAsAction="never"
+        android:visible="false"
         app:titleTextColor="?attr/colorOnPrimary" />
 </menu>

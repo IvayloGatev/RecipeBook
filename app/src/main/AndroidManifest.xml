@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.thu.recipebook" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_new"
@@ -11,13 +17,13 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.RecipeBook">
         <activity
-            android:name=".RecipeDetailsActivity"
+            android:name=".activities.RecipeDetailsActivity"
             android:exported="true" />
         <activity
-            android:name=".CreateRecipeActivity"
+            android:name=".activities.AddRecipeActivity"
             android:exported="true" />
         <activity
-            android:name=".RecipeListActivity"
+            android:name=".activities.RecipeListActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".UpdateJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service android:name=".LocationIntentService" />
     </application>
     <queries>
         <intent>
@@ -35,8 +39,4 @@
             <data android:mimeType="text/plain" />
         </intent>
     </queries>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

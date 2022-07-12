@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeListAdapter extends BaseAdapter {
-    private List<Recipe> data;
     private FavoritesDbHelper dbHelper;
+    private List<Recipe> data;
 
     public RecipeListAdapter(FavoritesDbHelper dbHelper) {
         this.dbHelper = dbHelper;
@@ -41,14 +41,14 @@ public class RecipeListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Context context = viewGroup.getContext();
-        String recipeName = data.get(i).getName();
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_view_item_recipe, null, false);
         }
 
         TextView textView = view.findViewById(R.id.text_view_recipe_list);
-        textView.setText(recipeName);
+        String name = data.get(i).getName();
+        textView.setText(name);
 
         ImageView imageView = view.findViewById(R.id.image_view_favorite);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
