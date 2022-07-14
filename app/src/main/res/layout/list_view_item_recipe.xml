@@ -7,11 +7,10 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/image_view_recipe_list"
+        android:id="@+id/image_view_country"
         android:layout_width="100dp"
         android:layout_height="75dp"
-        android:paddingHorizontal="10dp"
-        app:srcCompat="@drawable/dish_picture_placeholder" />
+        android:paddingHorizontal="10dp"/>
 
     <TextView
         android:id="@+id/text_view_recipe_list"

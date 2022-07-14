@@ -1,4 +1,4 @@
-package de.thu.recipebook;
+package de.thu.recipebook.models;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,12 +14,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.thu.recipebook.R;
+import de.thu.recipebook.databases.CountryDatabase;
+import de.thu.recipebook.databases.FavoritesDbHelper;
+
 public class RecipeListAdapter extends BaseAdapter {
     private FavoritesDbHelper dbHelper;
+    private CountryDatabase countryDatabase;
     private List<Recipe> data;
 
-    public RecipeListAdapter(FavoritesDbHelper dbHelper) {
+    public RecipeListAdapter(FavoritesDbHelper dbHelper, CountryDatabase countryDatabase) {
         this.dbHelper = dbHelper;
+        this.countryDatabase = countryDatabase;
         data = new ArrayList<>();
     }
 
@@ -46,18 +52,25 @@ public class RecipeListAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.list_view_item_recipe, null, false);
         }
 
+        ImageView countryImageView = view.findViewById(R.id.image_view_country);
+        String country = data.get(i).getCountry();
+        String imageResourceName = countryDatabase.getImageResourceName(country);
+        int imageId = context.getResources().getIdentifier(imageResourceName,
+                "drawable", context.getPackageName());
+        countryImageView.setImageResource(imageId);
+
         TextView textView = view.findViewById(R.id.text_view_recipe_list);
         String name = data.get(i).getName();
         textView.setText(name);
 
-        ImageView imageView = view.findViewById(R.id.image_view_favorite);
+        ImageView favoriteImageView = view.findViewById(R.id.image_view_favorite);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query(FavoritesDbHelper.FAVORITES_TABLE, new String[]{BaseColumns._ID},
                 BaseColumns._ID + " = ?", new String[]{data.get(i).getId()}, null, null, null);
         if (c.getCount() > 0) {
-            imageView.setVisibility(View.VISIBLE);
+            favoriteImageView.setVisibility(View.VISIBLE);
         } else {
-            imageView.setVisibility(View.INVISIBLE);
+            favoriteImageView.setVisibility(View.INVISIBLE);
         }
         return view;
     }

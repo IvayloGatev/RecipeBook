@@ -22,10 +22,10 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import de.thu.recipebook.FavoritesDbHelper;
+import de.thu.recipebook.databases.FavoritesDbHelper;
 import de.thu.recipebook.runnables.FetchRecipeDetailsRunnable;
 import de.thu.recipebook.R;
-import de.thu.recipebook.Recipe;
+import de.thu.recipebook.models.Recipe;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
     public String ADD_TO_FAVORITES = "Add To Favorites";

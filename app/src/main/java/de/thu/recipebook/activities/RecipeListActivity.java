@@ -18,19 +18,21 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
-import de.thu.recipebook.FavoritesDbHelper;
-import de.thu.recipebook.LocationIntentService;
+import de.thu.recipebook.databases.CountryDatabase;
+import de.thu.recipebook.databases.FavoritesDbHelper;
+import de.thu.recipebook.services.LocationIntentService;
 import de.thu.recipebook.R;
-import de.thu.recipebook.Recipe;
-import de.thu.recipebook.RecipeDatabase;
-import de.thu.recipebook.RecipeListAdapter;
+import de.thu.recipebook.models.Recipe;
+import de.thu.recipebook.databases.RecipeDatabase;
+import de.thu.recipebook.models.RecipeListAdapter;
 import de.thu.recipebook.runnables.FetchRecipeListRunnable;
 
 public class RecipeListActivity extends AppCompatActivity {
     public static String SHOW_ALL = "Show All";
     public static String SHOW_LOCAL_ONLY = "Show Local Only";
 
-    private RecipeDatabase database;
+    private RecipeDatabase recipeDatabase;
+    private CountryDatabase countryDatabase;
     private FavoritesDbHelper favoritesDbHelper;
     private RecipeListAdapter adapter;
 
@@ -50,9 +52,10 @@ public class RecipeListActivity extends AppCompatActivity {
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
 
-        database = RecipeDatabase.getInstance();
+        recipeDatabase = RecipeDatabase.getInstance();
+        countryDatabase = new CountryDatabase();
         favoritesDbHelper = new FavoritesDbHelper(this);
-        adapter = new RecipeListAdapter(favoritesDbHelper);
+        adapter = new RecipeListAdapter(favoritesDbHelper, countryDatabase);
 
         runnable = new FetchRecipeListRunnable(this);
         new Thread(runnable).start();
@@ -87,7 +90,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             Intent recipeDetailsIntent = new Intent(RecipeListActivity.this, RecipeDetailsActivity.class);
-            recipeDetailsIntent.putExtra("id", database.getRecipes().get(i).getId());
+            recipeDetailsIntent.putExtra("id", recipeDatabase.getRecipes().get(i).getId());
             startActivity(recipeDetailsIntent);
         });
     }
@@ -135,7 +138,7 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     public void refreshList() {
-        List<Recipe> data = database.getRecipes();
+        List<Recipe> data = recipeDatabase.getRecipes();
         adapter.setData(data);
         adapter.notifyDataSetChanged();
     }

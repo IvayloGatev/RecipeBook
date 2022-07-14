@@ -11,8 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import de.thu.recipebook.Recipe;
-import de.thu.recipebook.RecipeDatabase;
+import de.thu.recipebook.models.Recipe;
+import de.thu.recipebook.databases.RecipeDatabase;
 import de.thu.recipebook.activities.AddRecipeActivity;
 import de.thu.recipebook.activities.RecipeDetailsActivity;
 import okhttp3.Credentials;

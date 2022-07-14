@@ -1,7 +1,9 @@
-package de.thu.recipebook;
+package de.thu.recipebook.databases;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.thu.recipebook.models.Recipe;
 
 public class RecipeDatabase {
     private static RecipeDatabase instance;

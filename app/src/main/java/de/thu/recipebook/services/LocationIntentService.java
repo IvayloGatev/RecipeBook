@@ -1,4 +1,4 @@
-package de.thu.recipebook;
+package de.thu.recipebook.services;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 

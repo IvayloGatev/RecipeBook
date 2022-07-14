@@ -1,4 +1,4 @@
-package de.thu.recipebook;
+package de.thu.recipebook.models;
 
 import android.graphics.Bitmap;
 

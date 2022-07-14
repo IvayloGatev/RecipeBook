@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import de.thu.recipebook.Recipe;
+import de.thu.recipebook.models.Recipe;
 import de.thu.recipebook.activities.RecipeDetailsActivity;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;

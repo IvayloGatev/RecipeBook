@@ -11,9 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.thu.recipebook.Recipe;
-import de.thu.recipebook.RecipeDatabase;
-import de.thu.recipebook.RecipeListAdapter;
+import de.thu.recipebook.models.Recipe;
+import de.thu.recipebook.databases.RecipeDatabase;
 import de.thu.recipebook.activities.RecipeListActivity;
 import okhttp3.Credentials;
 import okhttp3.HttpUrl;

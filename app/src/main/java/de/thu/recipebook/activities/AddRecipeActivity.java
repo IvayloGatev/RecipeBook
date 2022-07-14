@@ -14,13 +14,15 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import de.thu.recipebook.databases.CountryDatabase;
 import de.thu.recipebook.runnables.AddRecipeRunnable;
 import de.thu.recipebook.R;
-import de.thu.recipebook.Recipe;
-import de.thu.recipebook.RecipeDatabase;
+import de.thu.recipebook.models.Recipe;
+import de.thu.recipebook.databases.RecipeDatabase;
 
 public class AddRecipeActivity extends AppCompatActivity {
     private RecipeDatabase recipeDatabase;
+    private CountryDatabase countryDatabase;
     private AddRecipeRunnable runnable;
     private ActivityResultLauncher<String> chooseImage;
     private ArrayAdapter<String> adapter;
@@ -40,16 +42,10 @@ public class AddRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_recipe);
 
         recipeDatabase = RecipeDatabase.getInstance();
+        countryDatabase = new CountryDatabase();
         runnable = new AddRecipeRunnable(this);
 
-        String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
-                "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
-                "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Latvia", "Liechtenstein", "Lithuania",
-                "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia",
-                "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
-                "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom"};
-
-        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countries);
+        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countryDatabase.getCountries());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         countrySpinner = findViewById(R.id.spinner_country);
         countrySpinner.setAdapter(adapter);
