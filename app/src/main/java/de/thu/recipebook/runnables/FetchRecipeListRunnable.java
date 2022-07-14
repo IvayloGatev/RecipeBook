@@ -43,7 +43,7 @@ public class FetchRecipeListRunnable implements Runnable {
                         database.setRecipes(recipes);
                         toastText = "The recipes were fetched successfully.";
                     } else {
-                        toastText = response.body().string();
+                        toastText = new JSONObject(response.body().string()).getString("message");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

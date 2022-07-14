@@ -36,7 +36,7 @@ public class FetchRecipeDetailsRunnable implements Runnable {
                         String body = response.body().string();
                         recipe = convertResponseBodyToRecipe(body);
                     } else {
-                        toastText = response.body().string();
+                        toastText = new JSONObject(response.body().string()).getString("message");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

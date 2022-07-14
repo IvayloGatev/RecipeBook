@@ -27,8 +27,8 @@ public class AddRecipeRunnable implements Runnable {
     private RecipeDatabase database;
     private AddRecipeActivity activity;
 
-    public AddRecipeRunnable(RecipeDatabase database, AddRecipeActivity activity) {
-        this.database = database;
+    public AddRecipeRunnable(AddRecipeActivity activity) {
+        this.database = RecipeDatabase.getInstance();
         this.activity = activity;
     }
 
@@ -50,7 +50,7 @@ public class AddRecipeRunnable implements Runnable {
                             activity.finish();
                         });
                     } else {
-                        toastText = response.body().string();
+                        toastText = new JSONObject(response.body().string()).getString("message");
                     }
                 } catch (Exception e) {
                     toastText = "Connection to the server couldn't be established.";

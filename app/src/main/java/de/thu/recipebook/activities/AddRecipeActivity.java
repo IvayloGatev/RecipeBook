@@ -23,10 +23,15 @@ public class AddRecipeActivity extends AppCompatActivity {
     private RecipeDatabase recipeDatabase;
     private AddRecipeRunnable runnable;
     private ActivityResultLauncher<String> chooseImage;
+    private ArrayAdapter<String> adapter;
 
     private Recipe recipe;
     private Bitmap image;
 
+    private EditText nameEditText;
+    private Spinner countrySpinner;
+    private EditText ingredientsEditText;
+    private EditText instructionsEditText;
     private ImageView imageView;
 
     @Override
@@ -35,7 +40,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_recipe);
 
         recipeDatabase = RecipeDatabase.getInstance();
-        runnable = new AddRecipeRunnable(recipeDatabase, this);
+        runnable = new AddRecipeRunnable(this);
 
         String[] countries = {"Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
                 "Bulgaria", "Croatia", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany",
@@ -44,10 +49,15 @@ public class AddRecipeActivity extends AppCompatActivity {
                 "Norway", "Poland", "Portugal", "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia",
                 "Spain", "Sweden", "Switzerland", "Ukraine", "United Kingdom"};
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countries);
+        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countries);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner countriesSpinner = findViewById(R.id.spinner_country);
-        countriesSpinner.setAdapter(adapter);
+        countrySpinner = findViewById(R.id.spinner_country);
+        countrySpinner.setAdapter(adapter);
+
+        nameEditText = findViewById(R.id.edit_text_name);
+        countrySpinner = findViewById(R.id.spinner_country);
+        ingredientsEditText = findViewById(R.id.edit_text_ingredients);
+        instructionsEditText = findViewById(R.id.edit_text_instructions);
 
         imageView = findViewById(R.id.image_view_upload);
         imageView.setOnClickListener(view -> {
@@ -79,25 +89,21 @@ public class AddRecipeActivity extends AppCompatActivity {
     }
 
     public void saveButtonOnClick(View view) {
-        EditText name = findViewById(R.id.edit_text_name);
-        Spinner country = findViewById(R.id.spinner_country);
-        EditText ingredients = findViewById(R.id.edit_text_ingredients);
-        EditText instructions = findViewById(R.id.edit_text_instructions);
 
         boolean isValid = true;
-        if (!validate(name)) {
+        if (!validate(nameEditText)) {
             isValid = false;
         }
-        if (!validate(ingredients)) {
+        if (!validate(ingredientsEditText)) {
             isValid = false;
         }
-        if (!validate(instructions)) {
+        if (!validate(instructionsEditText)) {
             isValid = false;
         }
 
         if (isValid) {
-            recipe = new Recipe(name.getText().toString(), country.getSelectedItem().toString(),
-                    ingredients.getText().toString(), instructions.getText().toString(), true);
+            recipe = new Recipe(nameEditText.getText().toString(), countrySpinner.getSelectedItem().toString(),
+                    ingredientsEditText.getText().toString(), instructionsEditText.getText().toString(), true);
             recipe.setImage(image);
 
             new Thread(runnable).start();
