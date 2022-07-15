@@ -79,8 +79,7 @@ public class FetchRecipeDetailsRunnable implements Runnable {
         if (jsonObject.has("image")) {
             String imageBase64 = jsonObject.getString("image");
             byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            recipe.setImage(bitmap);
+            recipe.setImage(decodedString);
         }
         return recipe;
     }

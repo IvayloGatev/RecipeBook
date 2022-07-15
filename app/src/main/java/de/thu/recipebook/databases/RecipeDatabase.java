@@ -127,6 +127,15 @@ public class RecipeDatabase {
         this.recipes = recipes;
     }
 
+    public void removeRecipe(String id) {
+        for (Recipe recipe : recipes) {
+            if (recipe.getId().equalsIgnoreCase(id)) {
+                recipes.remove(recipe);
+                break;
+            }
+        }
+    }
+
 //    public void updateRecipeList() {
 //        //Ex. 2
 //        //return recipes;

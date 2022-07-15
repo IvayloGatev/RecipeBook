@@ -9,6 +9,9 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,7 +43,10 @@ public class RecipeListActivity extends AppCompatActivity {
     private ResultReceiver resultReceiver;
 
     private ListView listView;
+    private EditText editTextSearch;
+    private Button buttonSearch;
 
+    private String filterName;
     private String filterCountry;
 
     @Override
@@ -87,12 +93,14 @@ public class RecipeListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.list_view_recipe);
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             Intent recipeDetailsIntent = new Intent(RecipeListActivity.this, RecipeDetailsActivity.class);
             recipeDetailsIntent.putExtra("id", recipeDatabase.getRecipes().get(i).getId());
             startActivity(recipeDetailsIntent);
         });
+
+        editTextSearch = findViewById(R.id.edit_text_search);
+        buttonSearch = findViewById(R.id.button_search);
     }
 
     @Override
@@ -105,8 +113,8 @@ public class RecipeListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.create_recipe_entry:
-                Intent addRecipeIntent = new Intent(this, AddRecipeActivity.class);
-                startActivity(addRecipeIntent);
+                Intent createRecipeIntent = new Intent(this, SaveRecipeActivity.class);
+                startActivity(createRecipeIntent);
                 break;
             case R.id.filter_country_entry:
                 if (filterCountry == null) {
@@ -137,6 +145,11 @@ public class RecipeListActivity extends AppCompatActivity {
         refreshList();
     }
 
+    public void searchButtonOnClick(View view) {
+        filterName = editTextSearch.getText().toString();
+        new Thread(runnable).start();
+    }
+
     public void refreshList() {
         List<Recipe> data = recipeDatabase.getRecipes();
         adapter.setData(data);
@@ -145,5 +158,9 @@ public class RecipeListActivity extends AppCompatActivity {
 
     public String getFilterCountry() {
         return filterCountry;
+    }
+
+    public String getFilterName() {
+        return filterName;
     }
 }

@@ -1,6 +1,7 @@
 package de.thu.recipebook.activities;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -14,21 +15,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
+
 import de.thu.recipebook.databases.CountryDatabase;
-import de.thu.recipebook.runnables.AddRecipeRunnable;
+import de.thu.recipebook.runnables.SaveRecipeRunnable;
 import de.thu.recipebook.R;
 import de.thu.recipebook.models.Recipe;
-import de.thu.recipebook.databases.RecipeDatabase;
 
-public class AddRecipeActivity extends AppCompatActivity {
-    private RecipeDatabase recipeDatabase;
+public class SaveRecipeActivity extends AppCompatActivity {
     private CountryDatabase countryDatabase;
-    private AddRecipeRunnable runnable;
+    private SaveRecipeRunnable runnable;
     private ActivityResultLauncher<String> chooseImage;
     private ArrayAdapter<String> adapter;
 
     private Recipe recipe;
-    private Bitmap image;
+    private byte[] image;
 
     private EditText nameEditText;
     private Spinner countrySpinner;
@@ -41,9 +42,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_recipe);
 
-        recipeDatabase = RecipeDatabase.getInstance();
         countryDatabase = new CountryDatabase();
-        runnable = new AddRecipeRunnable(this);
+        runnable = new SaveRecipeRunnable(this);
 
         adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countryDatabase.getCountries());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -68,16 +68,31 @@ public class AddRecipeActivity extends AppCompatActivity {
                 ActivityResultContracts.GetContent(), uri -> {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                image = bitmap;
-                imageView.setImageBitmap(bitmap);
+                setImage(bitmap);
 
-                float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-                imageView.getLayoutParams().height = (int) (270 * scale + 0.5f);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.WEBP, 0, stream);
+                byte[] byteArray = stream.toByteArray();
+                image = byteArray;
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         });
+
+        if (getIntent().getStringExtra("id") != null) {
+            if (getIntent().getByteArrayExtra("image") != null) {
+                byte[] byteArray = getIntent().getByteArrayExtra("image");
+                image = byteArray;
+                Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                setImage(bitmap);
+            }
+
+            nameEditText.setText(getIntent().getStringExtra("name"));
+            countrySpinner.setSelection(countryDatabase.getCountries().indexOf(getIntent().getStringExtra("country")));
+            ingredientsEditText.setText(getIntent().getStringExtra("ingredients"));
+            instructionsEditText.setText(getIntent().getStringExtra("instructions"));
+        }
     }
 
     public void selectImage(View view) {
@@ -85,6 +100,10 @@ public class AddRecipeActivity extends AppCompatActivity {
     }
 
     public void saveButtonOnClick(View view) {
+        String id = null;
+        if (getIntent().getStringExtra("id") != null) {
+            id = getIntent().getStringExtra("id");
+        }
 
         boolean isValid = true;
         if (!validate(nameEditText)) {
@@ -98,9 +117,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
 
         if (isValid) {
-            recipe = new Recipe(nameEditText.getText().toString(), countrySpinner.getSelectedItem().toString(),
+            recipe = new Recipe(id, nameEditText.getText().toString(), countrySpinner.getSelectedItem().toString(),
                     ingredientsEditText.getText().toString(), instructionsEditText.getText().toString(), true);
-            recipe.setImage(image);
+
+            if (image != null) {
+                recipe.setImage(image);
+            }
 
             new Thread(runnable).start();
 
@@ -118,6 +140,12 @@ public class AddRecipeActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private void setImage(Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
+        float scale = getApplicationContext().getResources().getDisplayMetrics().density;
+        imageView.getLayoutParams().height = (int) (270 * scale + 0.5f);
     }
 
     public Recipe getRecipe() {

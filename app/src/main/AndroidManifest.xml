@@ -20,7 +20,7 @@
             android:name=".activities.RecipeDetailsActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.AddRecipeActivity"
+            android:name=".activities.SaveRecipeActivity"
             android:exported="true" />
         <activity
             android:name=".activities.RecipeListActivity"

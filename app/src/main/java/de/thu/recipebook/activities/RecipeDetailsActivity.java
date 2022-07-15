@@ -9,6 +9,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import de.thu.recipebook.databases.FavoritesDbHelper;
+import de.thu.recipebook.runnables.DeleteRecipeRunnable;
 import de.thu.recipebook.runnables.FetchRecipeDetailsRunnable;
 import de.thu.recipebook.R;
 import de.thu.recipebook.models.Recipe;
@@ -34,11 +37,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     //    Ex. 1
 //    private RecipeDatabase recipeDatabase;
     private ShareActionProvider shareActionProvider;
-    private FetchRecipeDetailsRunnable runnable;
+    private FetchRecipeDetailsRunnable fetchRecipeDetailsRunnable;
+    private DeleteRecipeRunnable deleteRecipeRunnable;
     private FavoritesDbHelper favoritesDbHelper;
     private TextToSpeech textToSpeech;
 
     private MenuItem shareItem;
+    private MenuItem editItem;
+    private MenuItem deleteItem;
     private MenuItem favoriteItem;
 
     private Recipe recipe;
@@ -61,8 +67,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 //        Exercise 5
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
-        runnable = new FetchRecipeDetailsRunnable(this);
-        new Thread(runnable).start();
+        deleteRecipeRunnable = new DeleteRecipeRunnable(this);
+        fetchRecipeDetailsRunnable = new FetchRecipeDetailsRunnable(this);
+        new Thread(fetchRecipeDetailsRunnable).start();
 
         favoritesDbHelper = new FavoritesDbHelper(this);
         textToSpeech = new TextToSpeech(getApplicationContext(), status -> {
@@ -95,6 +102,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.recipe_details_menu, menu);
         shareItem = menu.findItem(R.id.action_share);
+        editItem = menu.findItem(R.id.edit_entry);
+        deleteItem = menu.findItem(R.id.delete_entry);
         favoriteItem = menu.findItem(R.id.favorite_entry);
         shareActionProvider = (ShareActionProvider)
                 MenuItemCompat.getActionProvider(shareItem);
@@ -115,6 +124,20 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     db.delete(FavoritesDbHelper.FAVORITES_TABLE, BaseColumns._ID + "=?", new String[]{recipe.getId()});
                     item.setTitle(ADD_TO_FAVORITES);
                 }
+                break;
+            case R.id.edit_entry:
+                Intent updateRecipeIntent = new Intent(this, SaveRecipeActivity.class);
+                updateRecipeIntent.putExtra("id", recipe.getId());
+                updateRecipeIntent.putExtra("name", recipe.getName());
+                updateRecipeIntent.putExtra("country", recipe.getCountry());
+                updateRecipeIntent.putExtra("ingredients", recipe.getIngredients());
+                updateRecipeIntent.putExtra("instructions", recipe.getInstructions());
+                updateRecipeIntent.putExtra("image", recipe.getImage());
+
+                startActivity(updateRecipeIntent);
+                break;
+            case R.id.delete_entry:
+                new Thread(deleteRecipeRunnable).start();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,12 +153,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         listenButton.setVisibility(TextView.VISIBLE);
 
         if (recipe.getImage() != null) {
-            imageView.setImageBitmap(recipe.getImage());
+            Bitmap bitmap = BitmapFactory.decodeByteArray(recipe.getImage(), 0, recipe.getImage().length);
+            imageView.setImageBitmap(bitmap);
         } else {
             imageView.setImageResource(R.drawable.dish_picture_placeholder);
         }
 
         this.recipe = recipe;
+        if (recipe.isCreator()) {
+            editItem.setVisible(true);
+            deleteItem.setVisible(true);
+        }
+
         setFavoriteMenuItemText();
         setShareText();
     }

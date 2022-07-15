@@ -9,7 +9,7 @@ public class Recipe {
     private String ingredients;
     private String instructions;
     private boolean isCreator;
-    private Bitmap image;
+    private byte[] image;
 
     public Recipe() {
         this(null, null, null, null, null, false);
@@ -56,11 +56,11 @@ public class Recipe {
         return isCreator;
     }
 
-    public Bitmap getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
