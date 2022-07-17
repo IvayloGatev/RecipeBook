@@ -44,7 +44,6 @@ public class RecipeListActivity extends AppCompatActivity {
 
     private ListView listView;
     private EditText editTextSearch;
-    private Button buttonSearch;
 
     private String filterName;
     private String filterCountry;
@@ -100,7 +99,6 @@ public class RecipeListActivity extends AppCompatActivity {
         });
 
         editTextSearch = findViewById(R.id.edit_text_search);
-        buttonSearch = findViewById(R.id.button_search);
     }
 
     @Override
