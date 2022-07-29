@@ -17,13 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.ByteArrayOutputStream;
 
-import de.thu.recipebook.databases.CountryDatabase;
+import de.thu.recipebook.models.CountryCollection;
 import de.thu.recipebook.runnables.SaveRecipeRunnable;
 import de.thu.recipebook.R;
 import de.thu.recipebook.models.Recipe;
 
 public class SaveRecipeActivity extends AppCompatActivity {
-    private CountryDatabase countryDatabase;
     private SaveRecipeRunnable runnable;
     private ActivityResultLauncher<String> chooseImage;
     private ArrayAdapter<String> adapter;
@@ -40,12 +39,11 @@ public class SaveRecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_recipe);
+        setContentView(R.layout.activity_save_recipe);
 
-        countryDatabase = new CountryDatabase();
         runnable = new SaveRecipeRunnable(this);
 
-        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countryDatabase.getCountries());
+        adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, CountryCollection.getCountries());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         countrySpinner = findViewById(R.id.spinner_country);
         countrySpinner.setAdapter(adapter);
@@ -89,7 +87,7 @@ public class SaveRecipeActivity extends AppCompatActivity {
             }
 
             nameEditText.setText(getIntent().getStringExtra("name"));
-            countrySpinner.setSelection(countryDatabase.getCountries().indexOf(getIntent().getStringExtra("country")));
+            countrySpinner.setSelection(CountryCollection.getCountries().indexOf(getIntent().getStringExtra("country")));
             ingredientsEditText.setText(getIntent().getStringExtra("ingredients"));
             instructionsEditText.setText(getIntent().getStringExtra("instructions"));
         }

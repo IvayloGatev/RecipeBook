@@ -1,16 +1,14 @@
-package de.thu.recipebook.databases;
+package de.thu.recipebook.models;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.thu.recipebook.models.Recipe;
-
-public class RecipeDatabase {
-    private static RecipeDatabase instance;
+public class RecipeCollection {
+    private static RecipeCollection instance;
 
     private List<Recipe> recipes;
 
-    private RecipeDatabase() {
+    private RecipeCollection() {
 //        Ex. 1
 //        recipes = new ArrayList<>();
 //
@@ -76,10 +74,10 @@ public class RecipeDatabase {
         recipes = new ArrayList<>();
     }
 
-    public static RecipeDatabase getInstance() {
+    public static RecipeCollection getInstance() {
         if (instance == null) {
-            synchronized (RecipeDatabase.class) {
-                instance = new RecipeDatabase();
+            synchronized (RecipeCollection.class) {
+                instance = new RecipeCollection();
             }
         }
         return instance;

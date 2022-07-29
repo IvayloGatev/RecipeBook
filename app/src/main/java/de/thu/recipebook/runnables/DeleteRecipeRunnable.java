@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import de.thu.recipebook.activities.RecipeDetailsActivity;
-import de.thu.recipebook.databases.RecipeDatabase;
+import de.thu.recipebook.models.RecipeCollection;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,11 +16,11 @@ import okhttp3.Response;
 
 public class DeleteRecipeRunnable implements Runnable {
     private RecipeDetailsActivity activity;
-    private RecipeDatabase database;
+    private RecipeCollection recipeCollection;
 
     public DeleteRecipeRunnable(RecipeDetailsActivity activity) {
         this.activity = activity;
-        this.database = RecipeDatabase.getInstance();
+        this.recipeCollection = RecipeCollection.getInstance();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class DeleteRecipeRunnable implements Runnable {
             try {
                 Response response = executeQuery();
                 if (response.isSuccessful()) {
-                    database.removeRecipe(activity.getIntent().getStringExtra("id"));
+                    recipeCollection.removeRecipe(activity.getIntent().getStringExtra("id"));
                     toastText = "The recipe was successfully deleted.";
                 } else {
                     toastText = new JSONObject(response.body().string()).getString("message");

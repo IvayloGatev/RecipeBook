@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thu.recipebook.models.Recipe;
-import de.thu.recipebook.databases.RecipeDatabase;
+import de.thu.recipebook.models.RecipeCollection;
 import de.thu.recipebook.activities.RecipeListActivity;
 import de.thu.recipebook.services.UpdateRecipeListNotifier;
 import okhttp3.Credentials;
@@ -22,12 +22,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class FetchRecipeListRunnable implements Runnable {
-    private RecipeDatabase database;
+    private RecipeCollection recipeCollection;
     private RecipeListActivity activity;
     private UpdateRecipeListNotifier notifier;
 
     public FetchRecipeListRunnable(RecipeListActivity activity) {
-        this.database = RecipeDatabase.getInstance();
+        this.recipeCollection = RecipeCollection.getInstance();
         this.activity = activity;
         this.notifier = new UpdateRecipeListNotifier(activity);
     }
@@ -42,7 +42,7 @@ public class FetchRecipeListRunnable implements Runnable {
                     if (response.isSuccessful()) {
                         String body = response.body().string();
                         List<Recipe> recipes = convertResponseBodyToRecipeList(body);
-                        database.setRecipes(recipes);
+                        recipeCollection.setRecipes(recipes);
                         toastText = "The recipes were fetched successfully.";
                         notifier.showOrUpdateNotification("Recipe list updated.");
                     } else {

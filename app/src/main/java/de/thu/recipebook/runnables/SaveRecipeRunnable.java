@@ -1,6 +1,5 @@
 package de.thu.recipebook.runnables;
 
-import android.content.Intent;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -9,10 +8,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import de.thu.recipebook.models.Recipe;
-import de.thu.recipebook.databases.RecipeDatabase;
 import de.thu.recipebook.activities.SaveRecipeActivity;
-import de.thu.recipebook.activities.RecipeDetailsActivity;
+import de.thu.recipebook.models.Recipe;
+import de.thu.recipebook.models.RecipeCollection;
 import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -22,11 +20,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SaveRecipeRunnable implements Runnable {
-    private RecipeDatabase database;
+    private RecipeCollection database;
     private SaveRecipeActivity activity;
 
     public SaveRecipeRunnable(SaveRecipeActivity activity) {
-        this.database = RecipeDatabase.getInstance();
+        this.database = RecipeCollection.getInstance();
         this.activity = activity;
     }
 
@@ -39,17 +37,12 @@ public class SaveRecipeRunnable implements Runnable {
                 try {
                     Response response = executeQuery(recipe);
                     if (response.isSuccessful()) {
-                        String id = recipe.getId();
                         String body = response.body().string();
-                        if (body != "") {
-                            id = new JSONObject(body).getString("id");
+                        if (!body.isEmpty()) {
+                            String id = new JSONObject(body).getString("id");
                             database.getRecipes().add(new Recipe(id, recipe.getName(), recipe.getCountry()));
                         }
-
-                        Intent recipeDetailsIntent = new Intent(activity, RecipeDetailsActivity.class);
-                        recipeDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        recipeDetailsIntent.putExtra("id", id);
-                        activity.startActivity(recipeDetailsIntent);
+                        activity.finish();
                     } else {
                         toastText = new JSONObject(response.body().string()).getString("message");
                     }

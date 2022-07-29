@@ -15,17 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thu.recipebook.R;
-import de.thu.recipebook.databases.CountryDatabase;
 import de.thu.recipebook.databases.FavoritesDbHelper;
 
 public class RecipeListAdapter extends BaseAdapter {
     private FavoritesDbHelper dbHelper;
-    private CountryDatabase countryDatabase;
     private List<Recipe> data;
 
-    public RecipeListAdapter(FavoritesDbHelper dbHelper, CountryDatabase countryDatabase) {
+    public RecipeListAdapter(FavoritesDbHelper dbHelper) {
         this.dbHelper = dbHelper;
-        this.countryDatabase = countryDatabase;
         data = new ArrayList<>();
     }
 
@@ -54,7 +51,7 @@ public class RecipeListAdapter extends BaseAdapter {
 
         ImageView countryImageView = view.findViewById(R.id.image_view_country);
         String country = data.get(i).getCountry();
-        String imageResourceName = countryDatabase.getImageResourceName(country);
+        String imageResourceName = CountryCollection.getImageResourceName(country);
         int imageId = context.getResources().getIdentifier(imageResourceName,
                 "drawable", context.getPackageName());
         countryImageView.setImageResource(imageId);

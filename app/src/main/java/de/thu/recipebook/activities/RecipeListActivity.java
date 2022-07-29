@@ -10,7 +10,6 @@ import android.os.ResultReceiver;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,21 +20,19 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
-import de.thu.recipebook.databases.CountryDatabase;
-import de.thu.recipebook.databases.FavoritesDbHelper;
-import de.thu.recipebook.services.LocationIntentService;
 import de.thu.recipebook.R;
+import de.thu.recipebook.databases.FavoritesDbHelper;
 import de.thu.recipebook.models.Recipe;
-import de.thu.recipebook.databases.RecipeDatabase;
+import de.thu.recipebook.models.RecipeCollection;
 import de.thu.recipebook.models.RecipeListAdapter;
 import de.thu.recipebook.runnables.FetchRecipeListRunnable;
+import de.thu.recipebook.services.LocationIntentService;
 
 public class RecipeListActivity extends AppCompatActivity {
     public static String SHOW_ALL = "Show All";
     public static String SHOW_LOCAL_ONLY = "Show Local Only";
 
-    private RecipeDatabase recipeDatabase;
-    private CountryDatabase countryDatabase;
+    private RecipeCollection recipeCollection;
     private FavoritesDbHelper favoritesDbHelper;
     private RecipeListAdapter adapter;
 
@@ -57,10 +54,9 @@ public class RecipeListActivity extends AppCompatActivity {
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
 
-        recipeDatabase = RecipeDatabase.getInstance();
-        countryDatabase = new CountryDatabase();
+        recipeCollection = RecipeCollection.getInstance();
         favoritesDbHelper = new FavoritesDbHelper(this);
-        adapter = new RecipeListAdapter(favoritesDbHelper, countryDatabase);
+        adapter = new RecipeListAdapter(favoritesDbHelper);
 
         runnable = new FetchRecipeListRunnable(this);
         new Thread(runnable).start();
@@ -94,7 +90,7 @@ public class RecipeListActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             Intent recipeDetailsIntent = new Intent(RecipeListActivity.this, RecipeDetailsActivity.class);
-            recipeDetailsIntent.putExtra("id", recipeDatabase.getRecipes().get(i).getId());
+            recipeDetailsIntent.putExtra("id", recipeCollection.getRecipes().get(i).getId());
             startActivity(recipeDetailsIntent);
         });
 
@@ -110,7 +106,7 @@ public class RecipeListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.create_recipe_entry:
+            case R.id.add_recipe_entry:
                 Intent createRecipeIntent = new Intent(this, SaveRecipeActivity.class);
                 startActivity(createRecipeIntent);
                 break;
@@ -149,7 +145,7 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     public void refreshList() {
-        List<Recipe> data = recipeDatabase.getRecipes();
+        List<Recipe> data = recipeCollection.getRecipes();
         adapter.setData(data);
         adapter.notifyDataSetChanged();
     }

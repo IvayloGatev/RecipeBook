@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/create_recipe_entry"
+        android:id="@+id/add_recipe_entry"
         android:title="Add Recipe"
         app:showAsAction="never"
         app:titleTextColor="?attr/colorOnPrimary" />
