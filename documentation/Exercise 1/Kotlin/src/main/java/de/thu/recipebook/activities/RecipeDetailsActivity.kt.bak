@@ -32,7 +32,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         }
     }
 
-    fun nextButtonOnClick(view: View?) {
+    fun nextButtonOnClick() {
         val nextRecipe = recipeCollection!!.getNextRecipe(recipe)
         setRecipe(nextRecipe)
     }
