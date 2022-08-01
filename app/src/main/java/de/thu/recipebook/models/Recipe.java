@@ -2,7 +2,9 @@ package de.thu.recipebook.models;
 
 import android.graphics.Bitmap;
 
-public class Recipe {
+import java.io.Serializable;
+
+public class Recipe implements Serializable {
     private String id;
     private String name;
     private String country;
