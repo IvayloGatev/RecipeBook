@@ -1,7 +1,5 @@
 package de.thu.recipebook.runnables;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.util.Base64;
 import android.widget.Toast;
@@ -10,8 +8,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import de.thu.recipebook.models.Recipe;
 import de.thu.recipebook.activities.RecipeDetailsActivity;
+import de.thu.recipebook.models.Recipe;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
