@@ -25,11 +25,6 @@ public class RecipeListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_list);
 
         recipeCollection = RecipeCollection.getInstance();
-        List<String> recipeNames = new ArrayList<>();
-        for (Recipe recipe : recipeCollection.getRecipes()) {
-            recipeNames.add(recipe.getName());
-        }
-
         adapter = new RecipeListAdapter();
         List<Recipe> data = recipeCollection.getRecipes();
         adapter.setData(data);

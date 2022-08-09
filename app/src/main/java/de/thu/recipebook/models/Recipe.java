@@ -1,7 +1,5 @@
 package de.thu.recipebook.models;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 public class Recipe implements Serializable {

@@ -19,12 +19,6 @@ class RecipeListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recipe_list)
 
         recipeCollection = RecipeCollection.instance
-        val recipeNames: MutableList<String> = ArrayList()
-        for (recipe in recipeCollection?.getRecipes()!!) {
-            recipeNames.add(recipe.name)
-
-        }
-
         adapter = RecipeListAdapter()
         val data: List<Recipe> = recipeCollection!!.getRecipes()
         adapter!!.setData(data)
