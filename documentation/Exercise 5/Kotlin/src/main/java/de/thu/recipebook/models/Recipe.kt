@@ -18,14 +18,6 @@ class Recipe constructor(
     )
 
     override fun toString(): String {
-        return """
-               $name
-               Country of origin:
-               $country
-               Ingredients:
-               $ingredients
-               Instructions:
-               $instructions
-               """.trimIndent()
+        return "$name\nCountry of origin:\n$country\nIngredients:\n$ingredients\nInstructions:\n$instructions"
     }
 }
