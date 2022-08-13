@@ -20,6 +20,7 @@ import de.thu.recipebook.runnables.FetchRecipeDetailsRunnable
 class RecipeDetailsActivity : AppCompatActivity() {
     private var recipe: Recipe? = null
     private var shareActionProvider: ShareActionProvider? = null
+	
     private var fetchRecipeDetailsRunnable: FetchRecipeDetailsRunnable? = null
     private var deleteRecipeRunnable: DeleteRecipeRunnable? = null
 
@@ -54,7 +55,6 @@ class RecipeDetailsActivity : AppCompatActivity() {
         editItem = menu.findItem(R.id.edit_entry)
         deleteItem = menu.findItem(R.id.delete_entry)
         shareActionProvider = MenuItemCompat.getActionProvider(shareItem) as ShareActionProvider
-        setShareText()
         return true
     }
 

@@ -22,13 +22,8 @@ import java.util.ArrayList
 
 class FetchRecipeListRunnable(activity: RecipeListActivity?) : Runnable {
     private val recipeCollection: RecipeCollection = RecipeCollection.instance!!
-    private val activity: RecipeListActivity?
-    private val notifier: UpdateRecipeListNotifier
-
-    init {
-        this.activity = activity
-        notifier = UpdateRecipeListNotifier(activity!!)
-    }
+    private val activity: RecipeListActivity? = activity
+    private val notifier: UpdateRecipeListNotifier = UpdateRecipeListNotifier(activity!!)
 
     override fun run() {
         synchronized(this@FetchRecipeListRunnable) {

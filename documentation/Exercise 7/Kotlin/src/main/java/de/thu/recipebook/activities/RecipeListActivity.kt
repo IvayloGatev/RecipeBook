@@ -39,7 +39,6 @@ class RecipeListActivity : AppCompatActivity() {
         runnable = FetchRecipeListRunnable(this)
         Thread(runnable).start()
 
-
         listView = findViewById(R.id.list_view_recipe)
         listView?.adapter = adapter
         listView?.onItemClickListener =

@@ -13,11 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class SaveRecipeRunnable(activity: SaveRecipeActivity?) : Runnable {
     private val recipeCollection: RecipeCollection = RecipeCollection.instance!!
-    private val activity: SaveRecipeActivity?
-
-    init {
-        this.activity = activity
-    }
+    private val activity: SaveRecipeActivity? = activity
 
     override fun run() {
         synchronized(this@SaveRecipeRunnable) {
