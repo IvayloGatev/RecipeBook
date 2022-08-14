@@ -63,7 +63,7 @@ public class FetchRecipeListRunnable implements Runnable {
     }
 
     private Response executeQuery(String nameFilter, String countryFilter) throws IOException {
-        String url = "http://192.168.0.105:3000/api/recipes";
+        String url = "http://10.0.2.2:3000/api/recipes";
         String credentials = Credentials.basic(Settings.Secure.getString(activity.getContentResolver(),
                 Settings.Secure.ANDROID_ID), "");
 

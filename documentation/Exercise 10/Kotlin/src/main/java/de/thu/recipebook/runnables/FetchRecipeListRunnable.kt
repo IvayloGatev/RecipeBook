@@ -56,7 +56,7 @@ class FetchRecipeListRunnable(activity: RecipeListActivity?) : Runnable {
 
     @Throws(IOException::class)
     private fun executeQuery(nameFilter: String?, countryFilter: String?): Response {
-        val url = "http://192.168.0.105:3000/api/recipes"
+        val url = "http://10.0.2.2:3000/api/recipes"
         val credentials = basic(
             Settings.Secure.getString(
                 activity!!.contentResolver,
