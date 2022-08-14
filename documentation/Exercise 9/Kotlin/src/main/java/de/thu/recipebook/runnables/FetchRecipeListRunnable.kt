@@ -65,9 +65,10 @@ class FetchRecipeListRunnable(activity: RecipeListActivity?) : Runnable {
         )
         val client = OkHttpClient()
         val httpBuilder: HttpUrl.Builder = url.toHttpUrlOrNull()!!.newBuilder()
-        if (nameFilter != null && !nameFilter.isEmpty()) {
+        if (nameFilter != null && nameFilter.isNotEmpty()) {
             httpBuilder.addQueryParameter("name", nameFilter)
         }
+		
         val request: Request =
             Request.Builder().url(httpBuilder.build()).header("Authorization", credentials).build()
         return client.newCall(request).execute()

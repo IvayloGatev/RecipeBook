@@ -110,7 +110,7 @@ class RecipeListActivity : AppCompatActivity() {
 
         val client = OkHttpClient()
         val httpBuilder: HttpUrl.Builder = url.toHttpUrlOrNull()!!.newBuilder()
-        if (nameFilter != null && !nameFilter.isEmpty()) {
+        if (nameFilter != null && nameFilter.isNotEmpty()) {
             httpBuilder.addQueryParameter("name", nameFilter)
         }
 
