@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_share" android:title="Share"
+        app:showAsAction="ifRoom"
+        app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider" />
+    <item
+        android:id="@+id/edit_entry"
+        android:title="Edit"
+        app:showAsAction="never"
+        android:visible="false"
+        app:titleTextColor="?attr/colorOnPrimary" />
+    <item
+        android:id="@+id/delete_entry"
+        android:title="Delete"
+        app:showAsAction="never"
+        android:visible="false"
+        app:titleTextColor="?attr/colorOnPrimary" />
+    <item
+        android:id="@+id/favorite_entry"
+        android:title="Add To Favorites"
+        app:showAsAction="never"
+        app:titleTextColor="?attr/colorOnPrimary" />
+</menu>
