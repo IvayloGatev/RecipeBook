@@ -74,6 +74,10 @@ public class SaveRecipeRunnable implements Runnable {
                 .addFormDataPart("country", recipe.getCountry())
                 .addFormDataPart("ingredients", recipe.getIngredients())
                 .addFormDataPart("instructions", recipe.getInstructions());
+        if (recipe.getImage() != null) {
+            builder.addFormDataPart("image", recipe.getName() + ".webp",
+                    RequestBody.create(recipe.getImage(), MediaType.parse("image/*webp")));
+        }
 
         RequestBody body = builder.build();
         Request request;
@@ -83,7 +87,6 @@ public class SaveRecipeRunnable implements Runnable {
         } else {
             request = new Request.Builder().url(url).header("Authorization", credentials).post(body).build();
         }
-
 
         Response response = client.newCall(request).execute();
         return response;

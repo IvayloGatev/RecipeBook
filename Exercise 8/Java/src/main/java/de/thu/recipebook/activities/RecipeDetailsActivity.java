@@ -9,9 +9,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.core.view.MenuItemCompat;
+
+import java.util.Locale;
 
 import de.thu.recipebook.R;
 import de.thu.recipebook.databases.FavoritesDbHelper;
@@ -33,6 +37,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private Recipe recipe;
     private ShareActionProvider shareActionProvider;
     private FavoritesDbHelper favoritesDbHelper;
+    private TextToSpeech textToSpeech;
 
     private FetchRecipeDetailsRunnable fetchRecipeDetailsRunnable;
     private DeleteRecipeRunnable deleteRecipeRunnable;
@@ -58,6 +63,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         new Thread(fetchRecipeDetailsRunnable).start();
 
         favoritesDbHelper = new FavoritesDbHelper(this);
+        textToSpeech = new TextToSpeech(getApplicationContext(), status -> {
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(Locale.UK);
+            }
+        });
 
         nameTextView = findViewById(R.id.text_view_name);
         countryTextView = findViewById(R.id.text_view_country);
@@ -138,6 +148,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         String country = ((TextView) view).getText().toString();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0`?q=" + country));
         startActivity(intent);
+    }
+
+    public void listen(View view) {
+        Button button = (Button) view;
+        if (textToSpeech.isSpeaking()) {
+            textToSpeech.stop();
+            button.setText("Play");
+        } else {
+            textToSpeech.speak(recipe.toString(), TextToSpeech.QUEUE_FLUSH, null, null);
+            button.setText("Stop");
+        }
     }
 
     private void setShareText() {

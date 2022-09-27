@@ -16,4 +16,9 @@
         app:showAsAction="never"
         android:visible="false"
         app:titleTextColor="?attr/colorOnPrimary" />
+    <item
+        android:id="@+id/favorite_entry"
+        android:title="Add To Favorites"
+        app:showAsAction="never"
+        app:titleTextColor="?attr/colorOnPrimary" />
 </menu>

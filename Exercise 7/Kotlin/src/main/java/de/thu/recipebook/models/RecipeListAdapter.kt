@@ -1,6 +1,8 @@
 package de.thu.recipebook.models
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.provider.BaseColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +10,10 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import de.thu.recipebook.R
+import de.thu.recipebook.databases.FavoritesDbHelper
 import de.thu.recipebook.models.CountryCollection.getImageResourceName
 
-class RecipeListAdapter : BaseAdapter() {
+class RecipeListAdapter(private val favoritesDbHelper: FavoritesDbHelper) : BaseAdapter() {
     private var data: List<Recipe>
 
     init {
@@ -49,6 +52,19 @@ class RecipeListAdapter : BaseAdapter() {
         val textView = view?.findViewById<TextView>(R.id.text_view_recipe_list)
         val name = data[i].name
         textView?.text = name
+
+        val favoriteImageView = view!!.findViewById<ImageView>(R.id.image_view_favorite)
+        val db: SQLiteDatabase = favoritesDbHelper.getReadableDatabase()
+        val c = db.query(
+            FavoritesDbHelper.FAVORITES_TABLE, arrayOf(BaseColumns._ID),
+            BaseColumns._ID + " = ?", arrayOf(data[i].id), null, null, null
+        )
+        if (c.count > 0) {
+            favoriteImageView.visibility = View.VISIBLE
+        } else {
+            favoriteImageView.visibility = View.INVISIBLE
+        }
+
 
         return view!!
     }

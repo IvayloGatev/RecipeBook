@@ -1,10 +1,14 @@
 package de.thu.recipebook.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,13 +21,18 @@ import androidx.appcompat.widget.ShareActionProvider;
 import androidx.core.view.MenuItemCompat;
 
 import de.thu.recipebook.R;
+import de.thu.recipebook.databases.FavoritesDbHelper;
 import de.thu.recipebook.models.Recipe;
 import de.thu.recipebook.runnables.DeleteRecipeRunnable;
 import de.thu.recipebook.runnables.FetchRecipeDetailsRunnable;
 
 public class RecipeDetailsActivity extends AppCompatActivity {
+    public String ADD_TO_FAVORITES = "Add To Favorites";
+    public String REMOVE_FROM_FAVORITES = "Remove From Favorites";
+
     private Recipe recipe;
     private ShareActionProvider shareActionProvider;
+    private FavoritesDbHelper favoritesDbHelper;
 
     private FetchRecipeDetailsRunnable fetchRecipeDetailsRunnable;
     private DeleteRecipeRunnable deleteRecipeRunnable;
@@ -31,6 +40,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private MenuItem shareItem;
     private MenuItem editItem;
     private MenuItem deleteItem;
+    private MenuItem favoriteItem;
 
     private TextView nameTextView;
     private TextView countryTextView;
@@ -47,6 +57,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         fetchRecipeDetailsRunnable = new FetchRecipeDetailsRunnable(this);
         new Thread(fetchRecipeDetailsRunnable).start();
 
+        favoritesDbHelper = new FavoritesDbHelper(this);
+
         nameTextView = findViewById(R.id.text_view_name);
         countryTextView = findViewById(R.id.text_view_country);
         ingredientsTextView = findViewById(R.id.text_view_ingredients);
@@ -60,6 +72,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         shareItem = menu.findItem(R.id.action_share);
         editItem = menu.findItem(R.id.edit_entry);
         deleteItem = menu.findItem(R.id.delete_entry);
+        favoriteItem = menu.findItem(R.id.favorite_entry);
         shareActionProvider = (ShareActionProvider)
                 MenuItemCompat.getActionProvider(shareItem);
         return true;
@@ -75,6 +88,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 break;
             case R.id.delete_entry:
                 new Thread(deleteRecipeRunnable).start();
+                break;
+            case R.id.favorite_entry:
+                SQLiteDatabase db = favoritesDbHelper.getWritableDatabase();
+                if (item.getTitle().equals(ADD_TO_FAVORITES)) {
+                    ContentValues values = new ContentValues();
+                    values.put(BaseColumns._ID, recipe.getId());
+                    db.insert(FavoritesDbHelper.FAVORITES_TABLE, null, values);
+                    item.setTitle(REMOVE_FROM_FAVORITES);
+                } else {
+                    db.delete(FavoritesDbHelper.FAVORITES_TABLE, BaseColumns._ID + "=?", new String[]{recipe.getId()});
+                    item.setTitle(ADD_TO_FAVORITES);
+                }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -106,6 +131,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
 
         setShareText();
+        setFavoriteMenuItemText();
     }
 
     public void countryTextViewOnClick(View view) {
@@ -119,5 +145,15 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
         shareActionProvider.setShareIntent(shareIntent);
         shareIntent.putExtra(Intent.EXTRA_TEXT, recipe.toString());
+    }
+
+    private void setFavoriteMenuItemText() {
+        SQLiteDatabase db = favoritesDbHelper.getReadableDatabase();
+        Cursor c = db.query(FavoritesDbHelper.FAVORITES_TABLE, new String[]{BaseColumns._ID},
+                BaseColumns._ID + " = ?", new String[]{recipe.getId()}, null, null, null);
+        favoriteItem.setVisible(true);
+        if (c.getCount() > 0) {
+            favoriteItem.setTitle(REMOVE_FROM_FAVORITES);
+        }
     }
 }

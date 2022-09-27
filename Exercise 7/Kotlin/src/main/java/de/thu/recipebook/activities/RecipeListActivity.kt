@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import de.thu.recipebook.R
+import de.thu.recipebook.databases.FavoritesDbHelper
 import de.thu.recipebook.models.Recipe
 import de.thu.recipebook.models.RecipeCollection
 import de.thu.recipebook.models.RecipeListAdapter
@@ -19,6 +20,7 @@ import de.thu.recipebook.runnables.FetchRecipeListRunnable
 class RecipeListActivity : AppCompatActivity() {
     private var recipeCollection: RecipeCollection? = null
     private var adapter: RecipeListAdapter? = null
+    private var favoritesDbHelper: FavoritesDbHelper? = null
 
     private var runnable: FetchRecipeListRunnable? = null
 
@@ -32,7 +34,8 @@ class RecipeListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recipe_list)
 
         recipeCollection = RecipeCollection.instance
-        adapter = RecipeListAdapter()
+        favoritesDbHelper = FavoritesDbHelper(this)
+        adapter = RecipeListAdapter(favoritesDbHelper!!)
         val data: List<Recipe> = recipeCollection!!.getRecipes()
         adapter!!.setData(data)
 

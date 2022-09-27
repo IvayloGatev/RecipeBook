@@ -6,10 +6,14 @@
         android:title="Add Recipe"
         app:showAsAction="never"
         app:titleTextColor="?attr/colorOnPrimary" />
-
     <item
         android:id="@+id/refresh_entry"
         android:title="Refresh List"
+        app:showAsAction="never"
+        app:titleTextColor="?attr/colorOnPrimary" />
+    <item
+        android:id="@+id/filter_country_entry"
+        android:title="Show Local Only"
         app:showAsAction="never"
         app:titleTextColor="?attr/colorOnPrimary" />
 </menu>

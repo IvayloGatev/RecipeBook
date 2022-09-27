@@ -7,6 +7,8 @@ import de.thu.recipebook.models.Recipe
 import de.thu.recipebook.models.RecipeCollection
 import okhttp3.*
 import okhttp3.Credentials.basic
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -78,6 +80,12 @@ class SaveRecipeRunnable(activity: SaveRecipeActivity?) : Runnable {
             .addFormDataPart("country", recipe.country)
             .addFormDataPart("ingredients", recipe.ingredients!!)
             .addFormDataPart("instructions", recipe.instructions!!)
+        if (recipe.image != null) {
+            builder.addFormDataPart(
+                "image", recipe.name + ".webp",
+                recipe.image!!.toRequestBody("image/*webp".toMediaTypeOrNull(), 0, recipe.image!!.size)
+            )
+        }
 
         val body: RequestBody = builder.build()
         val request: Request

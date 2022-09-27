@@ -1,9 +1,12 @@
 package de.thu.recipebook.activities
 
+import android.content.ContentValues
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,20 +16,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.MenuItemCompat
 import de.thu.recipebook.R
+import de.thu.recipebook.databases.FavoritesDbHelper
 import de.thu.recipebook.models.Recipe
 import de.thu.recipebook.runnables.DeleteRecipeRunnable
 import de.thu.recipebook.runnables.FetchRecipeDetailsRunnable
 
 class RecipeDetailsActivity : AppCompatActivity() {
+    var ADD_TO_FAVORITES = "Add To Favorites"
+    var REMOVE_FROM_FAVORITES = "Remove From Favorites"
+
     private var recipe: Recipe? = null
     private var shareActionProvider: ShareActionProvider? = null
-	
+    private var favoritesDbHelper: FavoritesDbHelper? = null
+
     private var fetchRecipeDetailsRunnable: FetchRecipeDetailsRunnable? = null
     private var deleteRecipeRunnable: DeleteRecipeRunnable? = null
 
     private var shareItem: MenuItem? = null
     private var editItem: MenuItem? = null
     private var deleteItem: MenuItem? = null
+    private var favoriteItem: MenuItem? = null
 
     private var nameTextView: TextView? = null
     private var countryTextView: TextView? = null
@@ -42,6 +51,8 @@ class RecipeDetailsActivity : AppCompatActivity() {
         fetchRecipeDetailsRunnable = FetchRecipeDetailsRunnable(this)
         Thread(fetchRecipeDetailsRunnable).start()
 
+        favoritesDbHelper = FavoritesDbHelper(this)
+
         nameTextView = findViewById(R.id.text_view_name)
         countryTextView = findViewById(R.id.text_view_country)
         ingredientsTextView = findViewById(R.id.text_view_ingredients)
@@ -54,6 +65,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         shareItem = menu.findItem(R.id.action_share)
         editItem = menu.findItem(R.id.edit_entry)
         deleteItem = menu.findItem(R.id.delete_entry)
+        favoriteItem = menu.findItem(R.id.favorite_entry)
         shareActionProvider = MenuItemCompat.getActionProvider(shareItem) as ShareActionProvider
         return true
     }
@@ -66,6 +78,22 @@ class RecipeDetailsActivity : AppCompatActivity() {
                 startActivity(updateRecipeIntent)
             }
             R.id.delete_entry -> Thread(deleteRecipeRunnable).start()
+            R.id.favorite_entry -> {
+                val db = favoritesDbHelper!!.writableDatabase
+                if (item.title == ADD_TO_FAVORITES) {
+                    val values = ContentValues()
+                    values.put(BaseColumns._ID, recipe!!.id)
+                    db.insert(FavoritesDbHelper.FAVORITES_TABLE, null, values)
+                    item.title = REMOVE_FROM_FAVORITES
+                } else {
+                    db.delete(
+                        FavoritesDbHelper.FAVORITES_TABLE, BaseColumns._ID + "=?", arrayOf(
+                            recipe!!.id
+                        )
+                    )
+                    item.title = ADD_TO_FAVORITES
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -96,6 +124,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         }
 
         setShareText()
+        setFavoriteMenuItemText()
     }
 
     fun countryTextViewOnClick(view: View) {
@@ -111,4 +140,15 @@ class RecipeDetailsActivity : AppCompatActivity() {
         shareIntent.putExtra(Intent.EXTRA_TEXT, recipe.toString())
     }
 
+    private fun setFavoriteMenuItemText() {
+        val db = favoritesDbHelper!!.readableDatabase
+        val c = db.query(
+            FavoritesDbHelper.FAVORITES_TABLE, arrayOf(BaseColumns._ID),
+            BaseColumns._ID + " = ?", arrayOf(recipe!!.id), null, null, null
+        )
+        favoriteItem!!.isVisible = true
+        if (c.count > 0) {
+            favoriteItem!!.title = REMOVE_FROM_FAVORITES
+        }
+    }
 }

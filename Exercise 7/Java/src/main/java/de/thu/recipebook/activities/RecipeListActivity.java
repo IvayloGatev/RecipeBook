@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.thu.recipebook.R;
+import de.thu.recipebook.databases.FavoritesDbHelper;
 import de.thu.recipebook.models.Recipe;
 import de.thu.recipebook.models.RecipeCollection;
 import de.thu.recipebook.models.RecipeListAdapter;
@@ -35,6 +36,7 @@ import okhttp3.Response;
 public class RecipeListActivity extends AppCompatActivity {
     private RecipeCollection recipeCollection;
     private RecipeListAdapter adapter;
+    private FavoritesDbHelper favoritesDbHelper;
 
     private FetchRecipeListRunnable runnable;
 
@@ -49,7 +51,8 @@ public class RecipeListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_list);
 
         recipeCollection = RecipeCollection.getInstance();
-        adapter = new RecipeListAdapter();
+        favoritesDbHelper = new FavoritesDbHelper(this);
+        adapter = new RecipeListAdapter(favoritesDbHelper);
         List<Recipe> data = recipeCollection.getRecipes();
         adapter.setData(data);
 

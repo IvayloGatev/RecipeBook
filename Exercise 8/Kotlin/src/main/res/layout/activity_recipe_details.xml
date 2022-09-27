@@ -88,5 +88,13 @@
             android:paddingBottom="20dp"
             android:textAlignment="textStart"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/button_listen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            android:onClick="listen"
+            android:text="Listen" />
     </LinearLayout>
 </ScrollView>

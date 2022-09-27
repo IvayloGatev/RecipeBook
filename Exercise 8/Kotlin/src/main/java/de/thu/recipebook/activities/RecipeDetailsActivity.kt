@@ -7,9 +7,12 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.BaseColumns
+import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.OnInitListener
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +23,7 @@ import de.thu.recipebook.databases.FavoritesDbHelper
 import de.thu.recipebook.models.Recipe
 import de.thu.recipebook.runnables.DeleteRecipeRunnable
 import de.thu.recipebook.runnables.FetchRecipeDetailsRunnable
+import java.util.*
 
 class RecipeDetailsActivity : AppCompatActivity() {
     var ADD_TO_FAVORITES = "Add To Favorites"
@@ -28,6 +32,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
     private var recipe: Recipe? = null
     private var shareActionProvider: ShareActionProvider? = null
     private var favoritesDbHelper: FavoritesDbHelper? = null
+    private var textToSpeech: TextToSpeech? = null
 
     private var fetchRecipeDetailsRunnable: FetchRecipeDetailsRunnable? = null
     private var deleteRecipeRunnable: DeleteRecipeRunnable? = null
@@ -52,6 +57,11 @@ class RecipeDetailsActivity : AppCompatActivity() {
         Thread(fetchRecipeDetailsRunnable).start()
 
         favoritesDbHelper = FavoritesDbHelper(this)
+        textToSpeech = TextToSpeech(applicationContext) { status: Int ->
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech!!.language = Locale.UK
+            }
+        }
 
         nameTextView = findViewById(R.id.text_view_name)
         countryTextView = findViewById(R.id.text_view_country)
@@ -131,6 +141,17 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val country = (view as TextView).text.toString()
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0`?q=$country"))
         startActivity(intent)
+    }
+
+    fun listen(view: View) {
+        val button = view as Button
+        if (textToSpeech!!.isSpeaking) {
+            textToSpeech!!.stop()
+            button.text = "Play"
+        } else {
+            textToSpeech!!.speak(recipe.toString(), TextToSpeech.QUEUE_FLUSH, null, null)
+            button.text = "Stop"
+        }
     }
 
     private fun setShareText() {

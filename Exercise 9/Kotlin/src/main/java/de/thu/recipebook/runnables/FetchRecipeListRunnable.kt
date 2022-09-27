@@ -30,7 +30,7 @@ class FetchRecipeListRunnable(activity: RecipeListActivity?) : Runnable {
             if (activity != null) {
                 var toastText = "Connection to the server couldn't be established."
                 try {
-                    val response = executeQuery(activity.getFilterName())
+                    val response = executeQuery(activity.getFilterName(), activity.getFilterCountry())
                     if (response.isSuccessful) {
                         val body = response.body!!.string()
                         val recipes = convertResponseBodyToRecipeList(body)
@@ -55,7 +55,7 @@ class FetchRecipeListRunnable(activity: RecipeListActivity?) : Runnable {
     }
 
     @Throws(IOException::class)
-    private fun executeQuery(nameFilter: String?): Response {
+    private fun executeQuery(nameFilter: String?, countryFilter: String?): Response {
         val url = "http://10.0.2.2:3000/api/recipes"
         val credentials = basic(
             Settings.Secure.getString(
@@ -63,12 +63,16 @@ class FetchRecipeListRunnable(activity: RecipeListActivity?) : Runnable {
                 Settings.Secure.ANDROID_ID
             ), ""
         )
+
         val client = OkHttpClient()
         val httpBuilder: HttpUrl.Builder = url.toHttpUrlOrNull()!!.newBuilder()
         if (nameFilter != null && nameFilter.isNotEmpty()) {
             httpBuilder.addQueryParameter("name", nameFilter)
         }
-		
+        if (countryFilter != null) {
+            httpBuilder.addQueryParameter("country", countryFilter)
+        }
+
         val request: Request =
             Request.Builder().url(httpBuilder.build()).header("Authorization", credentials).build()
         return client.newCall(request).execute()

@@ -10,10 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/image_view_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:adjustViewBounds="true"
+            android:paddingHorizontal="10dp"
+            android:paddingBottom="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_upload_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginHorizontal="30dp"
+            android:onClick="selectImage"
+            android:text="Choose an image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_upload" />
+
         <EditText
             android:id="@+id/edit_text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:layout_marginHorizontal="30dp"
             android:ems="10"
             android:hint="Name"
@@ -21,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/button_upload_image" />
 
         <Spinner
             android:id="@+id/spinner_country"
@@ -56,8 +81,8 @@
             android:id="@+id/edit_text_instructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
             android:layout_marginTop="32dp"
+            android:layout_marginHorizontal="30dp"
             android:height="300dp"
             android:ems="10"
             android:gravity="start|top"

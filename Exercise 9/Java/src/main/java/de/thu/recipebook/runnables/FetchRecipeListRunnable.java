@@ -38,7 +38,7 @@ public class FetchRecipeListRunnable implements Runnable {
             if (activity != null) {
                 String toastText = "Connection to the server couldn't be established.";
                 try {
-                    Response response = executeQuery(activity.getFilterName());
+                    Response response = executeQuery(activity.getFilterName(), activity.getFilterCountry());
                     if (response.isSuccessful()) {
                         String body = response.body().string();
                         List<Recipe> recipes = convertResponseBodyToRecipeList(body);
@@ -62,7 +62,7 @@ public class FetchRecipeListRunnable implements Runnable {
         }
     }
 
-    private Response executeQuery(String nameFilter) throws IOException {
+    private Response executeQuery(String nameFilter, String countryFilter) throws IOException {
         String url = "http://10.0.2.2:3000/api/recipes";
         String credentials = Credentials.basic(Settings.Secure.getString(activity.getContentResolver(),
                 Settings.Secure.ANDROID_ID), "");
@@ -71,6 +71,9 @@ public class FetchRecipeListRunnable implements Runnable {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         if (nameFilter != null && !nameFilter.isEmpty()) {
             httpBuilder.addQueryParameter("name", nameFilter);
+        }
+        if (countryFilter != null) {
+            httpBuilder.addQueryParameter("country", countryFilter);
         }
 
         Request request = new Request.Builder().url(httpBuilder.build()).header("Authorization", credentials).build();
